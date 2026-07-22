@@ -48,9 +48,9 @@ export default function Settings() {
         toast({
           title: "Notifications need setup",
           description: isAndroid
-            ? "Install AheadTime to your home screen from Chrome â‹® â†’ Add to Home Screen, then open it from there to enable notifications."
+            ? "Install AheadTime to your home screen from Chrome ⋮ → Add to Home Screen, then open it from there to enable notifications."
             : isIOS
-            ? "Add to Home Screen â†’ open from the icon â†’ enable in iOS Settings."
+            ? "Add to Home Screen → open from the icon → enable in iOS Settings."
             : "Use Chrome or install the app to enable notifications.",
           variant: "default",
           duration: 8000,
@@ -59,7 +59,7 @@ export default function Settings() {
       }
 
       if (permission === "denied") {
-        // Can't re-prompt â€” show step-by-step instructions for the platform
+        // Can't re-prompt — show step-by-step instructions for the platform
         setNotifications(false);
         const instructions = openNotificationSettings();
         toast({
@@ -71,14 +71,14 @@ export default function Settings() {
         return;
       }
 
-      // Permission is "default" â€” request it (must be within the click gesture)
+      // Permission is "default" — request it (must be within the click gesture)
       const granted = await requestNotificationPermission();
       if (granted) {
         setNotificationSetting(true);
         setNotifications(true);
         toast({ title: "Notifications enabled", variant: "success" });
       } else {
-        // Permission not granted â€” keep toggle off, guide to settings
+        // Permission not granted — keep toggle off, guide to settings
         setNotifications(false);
         const currentPerm = getNotificationPermission();
         const instructions = openNotificationSettings();
@@ -167,7 +167,7 @@ export default function Settings() {
   };
 
   // Hard reload: clears ALL caches, service workers, React Query cache, and
-  // app-specific localStorage data â€” then forces a fresh reload from the server.
+  // app-specific localStorage data — then forces a fresh reload from the server.
   // Fixes PWA stale-cache issues where old versions/features persist across devices.
   const handleHardReload = async () => {
     setHardReloading(true);
@@ -201,7 +201,7 @@ export default function Settings() {
       // 5. Clear sessionStorage
       sessionStorage.clear();
 
-      // 6. Hard reload â€” bypass cache
+      // 6. Hard reload — bypass cache
       window.location.reload();
     } catch (e) {
       // Fallback: just reload
@@ -263,8 +263,8 @@ export default function Settings() {
           )}
 
           <Section title="Data & Backup">
-            <RowButton icon={RefreshCw} label={syncing ? "Syncingâ€¦" : "Sync Now"} subtitle="Force refresh all data from server" tint="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50" onClick={handleSync} />
-            <RowButton icon={RotateCcw} label={hardReloading ? "Clearing cacheâ€¦" : "Hard Reload"} subtitle="Clear all cache & offline data, pull fresh version" tint="text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50" onClick={handleHardReload} />
+            <RowButton icon={RefreshCw} label={syncing ? "Syncing…" : "Sync Now"} subtitle="Force refresh all data from server" tint="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50" onClick={handleSync} />
+            <RowButton icon={RotateCcw} label={hardReloading ? "Clearing cache…" : "Hard Reload"} subtitle="Clear all cache & offline data, pull fresh version" tint="text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50" onClick={handleHardReload} />
             <RowButton icon={Download} label="Export Backup" subtitle="Download all data as JSON backup" tint="text-[#FF8C42] bg-orange-50 dark:bg-orange-950/50" onClick={handleExport} />
             <RowButton icon={Upload} label="Import Backup" subtitle="Restore data from a JSON backup" tint="text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/50" onClick={() => setImportOpen(true)} />
             <RowButton icon={Users} label="Family Profiles" subtitle="Manage profiles and organize documents" tint="text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-950/50" onClick={() => navigate("/profiles")} />
@@ -285,7 +285,7 @@ export default function Settings() {
             <Trash2 className="w-4 h-4" /> Delete Account
           </button>
 
-          <p className="text-center text-muted-foreground text-xs">AheadTime v{latestVersion || "3.0"} â€” made with â¤ï¸ by 8px Studio</p>
+          <p className="text-center text-muted-foreground text-xs">AheadTime v{latestVersion || "3.0"} — made with ❤ï¸ by 8px Studio</p>
         </div>
       </div>
 
@@ -482,7 +482,7 @@ function EditProfileDialog({ onClose }) {
         </div>
         <div className="mb-2">
           <p className="text-xs text-muted-foreground mb-1">Email</p>
-          <p className="text-sm text-foreground bg-white/30 dark:bg-white/10 rounded-xl px-4 py-2.5">{user?.email || "â€”"}</p>
+          <p className="text-sm text-foreground bg-white/30 dark:bg-white/10 rounded-xl px-4 py-2.5">{user?.email || "—"}</p>
         </div>
         <div className="mb-4">
           <p className="text-xs text-muted-foreground mb-1">Display Name</p>
@@ -527,7 +527,7 @@ function ImportDialog({ onClose }) {
       let totalImported = 0;
       const counts = {};
 
-      // Import categories â€” merge by name (skip duplicates to avoid dups)
+      // Import categories — merge by name (skip duplicates to avoid dups)
       if (Array.isArray(backup.categories) && backup.categories.length > 0) {
         const existingCats = await db.entities.Category.list();
         const existingNames = new Set(existingCats.map(c => (c.name || "").toLowerCase()));
@@ -539,7 +539,7 @@ function ImportDialog({ onClose }) {
         totalImported += newCats.length;
       }
 
-      // Import family profiles â€” merge by name (skip duplicates)
+      // Import family profiles — merge by name (skip duplicates)
       if (Array.isArray(backup.family_profiles) && backup.family_profiles.length > 0) {
         const existingProfiles = await db.entities.FamilyProfile.list();
         const existingNames = new Set(existingProfiles.map(p => (p.name || "").toLowerCase()));
@@ -628,7 +628,7 @@ function ImportDialog({ onClose }) {
         {status === "loading" && (
           <div className="flex flex-col items-center py-8 gap-3">
             <div className="w-8 h-8 border-4 border-border border-t-green-500 rounded-full animate-spin" />
-            <p className="text-sm text-muted-foreground">Restoringâ€¦</p>
+            <p className="text-sm text-muted-foreground">Restoring…</p>
           </div>
         )}
         {(status === "success" || status === "error") && (

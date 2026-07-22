@@ -196,7 +196,7 @@ function MonthGrid({ cursor, setCursor, selectedDate, setSelectedDate, itemsByDa
         <div className="animate-fade-in">
           <h3 className="text-foreground font-semibold text-sm mb-2 px-1">
             {formatDate(dateStr(selectedDate))}
-            {selectedItems.length > 0 && ` â€¢ ${selectedItems.length} item${selectedItems.length > 1 ? "s" : ""}`}
+            {selectedItems.length > 0 && ` • ${selectedItems.length} item${selectedItems.length > 1 ? "s" : ""}`}
           </h3>
           {selectedItems.length === 0 ? (
             <EmptyState icon={CalendarDays} title="No renewals" subtitle="Nothing due on this day." />
@@ -237,7 +237,7 @@ function TimelineView({ weekDays, setWeekStart, weekStart, selectedDate, setSele
             <ChevronLeft className="w-5 h-5 text-foreground" />
           </button>
           <h2 className="text-foreground font-display text-xl">
-            {MONTH_NAMES[weekDays[0].getMonth()].slice(0, 3)} {weekDays[0].getDate()} â€” {MONTH_NAMES[weekDays[6].getMonth()].slice(0, 3)} {weekDays[6].getDate()}
+            {MONTH_NAMES[weekDays[0].getMonth()].slice(0, 3)} {weekDays[0].getDate()} — {MONTH_NAMES[weekDays[6].getMonth()].slice(0, 3)} {weekDays[6].getDate()}
           </h2>
           <button onClick={() => setWeekStart(new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + 7))} className="w-9 h-9 rounded-full glass-frost flex items-center justify-center active:scale-95 transition-transform">
             <ChevronRight className="w-5 h-5 text-foreground" />
@@ -268,7 +268,7 @@ function TimelineView({ weekDays, setWeekStart, weekStart, selectedDate, setSele
         <h3 className="text-foreground font-semibold text-sm mb-2 px-1 flex items-center gap-2">
           <Clock className="w-4 h-4 text-muted-foreground" />
           {selectedDate && formatDate(dateStr(selectedDate))}
-          {selectedItems.length > 0 && ` â€¢ ${selectedItems.length} item${selectedItems.length > 1 ? "s" : ""}`}
+          {selectedItems.length > 0 && ` • ${selectedItems.length} item${selectedItems.length > 1 ? "s" : ""}`}
         </h3>
         {selectedItems.length === 0 ? (
           <EmptyState icon={CalendarDays} title="Nothing scheduled" subtitle="No renewals due on this day." />

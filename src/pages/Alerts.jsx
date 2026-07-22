@@ -124,7 +124,7 @@ function AlertGroup({ title, icon: Icon, tint, items, navigate, categories = [] 
                 <p className="text-foreground font-medium text-sm leading-snug line-clamp-2">{doc.name}</p>
                 <div className="flex items-center gap-1.5 mt-1">
                   <span className="text-muted-foreground text-xs truncate">{detail}</span>
-                  <span className="text-muted-foreground/40 text-xs">Â·</span>
+                  <span className="text-muted-foreground/40 text-xs">·</span>
                   <span className="text-muted-foreground text-xs whitespace-nowrap">{formatDate(doc.expiry_date)}</span>
                 </div>
               </div>

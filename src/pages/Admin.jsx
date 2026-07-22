@@ -88,7 +88,7 @@ export default function Admin() {
   };
 
   const formatDate = (dateStr) => {
-    if (!dateStr) return "â€”";
+    if (!dateStr) return "—";
     const d = new Date(dateStr);
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) +
       " " + d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
@@ -176,7 +176,7 @@ export default function Admin() {
             <div className="px-4 py-3">
               <div className="flex items-center gap-3 mb-3 text-xs">
                 <span className="text-muted-foreground">{users.length} total</span>
-                <span className="text-muted-foreground">Â·</span>
+                <span className="text-muted-foreground">·</span>
                 <span className="text-muted-foreground">{adminCount} admin{adminCount !== 1 ? "s" : ""}</span>
               </div>
               <div className="space-y-1 max-h-64 overflow-y-auto">
@@ -256,7 +256,7 @@ export default function Admin() {
             </button>
           </Section>
 
-          <p className="text-center text-muted-foreground text-xs pt-2">Admin Panel â€” AheadTime v3.0</p>
+          <p className="text-center text-muted-foreground text-xs pt-2">Admin Panel — AheadTime v3.0</p>
         </div>
       </div>
 

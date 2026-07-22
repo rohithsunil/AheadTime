@@ -3,7 +3,7 @@ import { db } from '@/api/db';
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-// Server-side streak tracking â€” stored in StreakRecord entity so it syncs
+// Server-side streak tracking — stored in StreakRecord entity so it syncs
 // across all devices for the same user account.
 // A streak day = the app was opened that day (resets at LOCAL midnight).
 
@@ -30,7 +30,7 @@ export function useStreak() {
     },
   });
 
-  // Check in on mount â€” increment streak if first open today
+  // Check in on mount — increment streak if first open today
   useEffect(() => {
     if (isLoading || checkedIn.current) return;
     checkedIn.current = true;
@@ -64,7 +64,7 @@ export function useStreak() {
         });
         queryClient.setQueryData(["streakRecord"], { ...record, ...updated });
       } catch {
-        // network error â€” streak will sync next time
+        // network error — streak will sync next time
       }
     };
 

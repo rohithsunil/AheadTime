@@ -20,14 +20,14 @@ export default function BroadcastModal() {
     queryFn: () => db.entities.PushBroadcast.list("-created_date", 10),
   });
 
-  // Get the last seen timestamp â€” only show broadcasts created after this.
+  // Get the last seen timestamp — only show broadcasts created after this.
   // If never seen before (new user), use epoch so they see the latest one once.
   const lastSeen = localStorage.getItem(LAST_SEEN_KEY);
   const lastSeenDate = lastSeen ? new Date(lastSeen) : new Date(0);
 
   const latest = broadcasts.find((b) => new Date(b.created_date) > lastSeenDate);
 
-  // Update last seen timestamp on mount â€” this prevents old broadcasts from
+  // Update last seen timestamp on mount — this prevents old broadcasts from
   // reappearing on subsequent app opens.
   useEffect(() => {
     localStorage.setItem(LAST_SEEN_KEY, new Date().toISOString());
@@ -48,7 +48,7 @@ export default function BroadcastModal() {
       notified[latest.id] = true;
       localStorage.setItem(NOTIFIED_KEY, JSON.stringify(notified));
     } catch {
-      // Notification might not work in all contexts â€” modal still shows
+      // Notification might not work in all contexts — modal still shows
     }
   }, [latest]);
 

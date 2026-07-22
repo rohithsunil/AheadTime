@@ -158,7 +158,7 @@ export default function DocumentDetail() {
     <Layout>
       <div className="min-h-screen pb-28 lg:pb-12 safe-top animate-route-in">
         <div className="max-w-2xl mx-auto w-full">
-          {/* Status Header â€” glass card on gradient */}
+          {/* Status Header — glass card on gradient */}
           <div className="px-5 lg:px-8 pt-12 pb-4">
             <div className="flex items-center justify-between mb-4">
               <button onClick={() => navigate(-1)} className="w-9 h-9 rounded-full glass-panel flex items-center justify-center active:scale-95 transition-transform">
@@ -178,14 +178,14 @@ export default function DocumentDetail() {
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium mb-3 bg-white/90 dark:bg-black/30 text-foreground backdrop-blur-md shadow-sm">
                 <div className={cn("w-2 h-2 rounded-full", cfg.dot, (status === "urgent" || status === "overdue") && "animate-breathe")} />
                 {cfg.label}
-                {doc.archived && <span className="ml-1 opacity-60">â€¢ Archived</span>}
-                {isVoucher && doc.redeemed && <span className="ml-1 opacity-60">â€¢ Redeemed</span>}
+                {doc.archived && <span className="ml-1 opacity-60">• Archived</span>}
+                {isVoucher && doc.redeemed && <span className="ml-1 opacity-60">• Redeemed</span>}
               </div>
               <h1 className="text-white text-3xl lg:text-4xl font-display leading-tight">{doc.name}</h1>
               <p className="text-white/70 text-sm mt-1">
                 {isVoucher
-                  ? [doc.category, doc.store].filter(Boolean).join(" â€¢ ")
-                  : [doc.category, doc.recurrence_type].filter(Boolean).join(" â€¢ ")}
+                  ? [doc.category, doc.store].filter(Boolean).join(" • ")
+                  : [doc.category, doc.recurrence_type].filter(Boolean).join(" • ")}
               </p>
 
               <div className="mt-5 mb-1">
@@ -236,7 +236,7 @@ export default function DocumentDetail() {
             <div className="px-5 lg:px-8 mt-2">
               <div className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 w-fit">
                 <Zap className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                <span className="text-emerald-700 dark:text-emerald-300 text-xs font-semibold">Auto-Pay enabled â€” renews automatically</span>
+                <span className="text-emerald-700 dark:text-emerald-300 text-xs font-semibold">Auto-Pay enabled — renews automatically</span>
               </div>
             </div>
           )}
@@ -269,7 +269,7 @@ export default function DocumentDetail() {
                 </div>
                 <div>
                   <p className="text-muted-foreground text-xs">Family Profile</p>
-                  <p className="text-foreground font-medium text-sm">{profile.name} â€¢ {profile.relationship}</p>
+                  <p className="text-foreground font-medium text-sm">{profile.name} • {profile.relationship}</p>
                 </div>
               </div>
             )}
@@ -453,7 +453,7 @@ function RenewSheet({ doc, type, meta, onClose, onSuccess }) {
         document_id: doc.id, document_name: doc.name,
         renewed_date: today, previous_expiry: doc.expiry_date, new_expiry: newExpiry,
       });
-      console.log("[RenewalHistory] âœ… Created for:", doc.name);
+      console.log("[RenewalHistory] ✅ Created for:", doc.name);
       await db.entities[meta.entity].update(doc.id, { expiry_date: newExpiry, snoozed_until: null });
       onSuccess();
     } catch (e) { setSaving(false); }

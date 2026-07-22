@@ -22,7 +22,7 @@ const URGENCY_FILTERS = ["All", "Overdue", "Urgent", "Soon", "Safe"];
 const SORT_OPTIONS = [
   { value: "expiry", label: "Soonest expiry" },
   { value: "recent", label: "Recently added" },
-  { value: "alpha", label: "Aâ€“Z" },
+  { value: "alpha", label: "A–Z" },
 ];
 
 // Document sub-tabs
@@ -236,7 +236,7 @@ export default function Documents() {
             renewed_date: new Date().toISOString().split("T")[0],
             previous_expiry: doc.expiry_date, new_expiry: next,
           });
-          console.log("[RenewalHistory] âœ… Created for:", doc.name);
+          console.log("[RenewalHistory] ✅ Created for:", doc.name);
           await db.entities[ent].update(doc.id, { expiry_date: next, snoozed_until: null });
         }
       }
@@ -339,10 +339,10 @@ export default function Documents() {
           </div>
         </div>
 
-        {/* Customizable filter bar â€” shows only user-selected filters + All Filters button */}
+        {/* Customizable filter bar — shows only user-selected filters + All Filters button */}
         <div className="px-5 lg:px-10 max-w-3xl mx-auto w-full mb-3">
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-            {/* Urgency pills â€” visible if pref enabled */}
+            {/* Urgency pills — visible if pref enabled */}
             {filterPrefs.urgency && URGENCY_FILTERS.map((u) => {
               const isActive = urgency === u;
               const colors = urgencyColors[u];
@@ -364,7 +364,7 @@ export default function Documents() {
 
             {filterPrefs.urgency && (filterPrefs.sort || filterPrefs.archived) && <div className="w-px h-4 bg-border shrink-0" />}
 
-            {/* Sort options â€” visible if pref enabled */}
+            {/* Sort options — visible if pref enabled */}
             {filterPrefs.sort && SORT_OPTIONS.map((opt) => (
               <button
                 key={opt.value}
@@ -380,7 +380,7 @@ export default function Documents() {
               </button>
             ))}
 
-            {/* Tags filter â€” visible if pref enabled, all tags as scrollable pills */}
+            {/* Tags filter — visible if pref enabled, all tags as scrollable pills */}
             {filterPrefs.tags && allTags.length > 0 && (
               <>
                 {filterPrefs.sort && <div className="w-px h-4 bg-border shrink-0" />}
@@ -409,7 +409,7 @@ export default function Documents() {
               </>
             )}
 
-            {/* Archived toggle â€” visible if pref enabled */}
+            {/* Archived toggle — visible if pref enabled */}
             {filterPrefs.archived && (
               <>
                 {(filterPrefs.urgency || filterPrefs.sort) && <div className="w-px h-4 bg-border shrink-0" />}
@@ -433,7 +433,7 @@ export default function Documents() {
               </>
             )}
 
-            {/* All Filters button â€” always present */}
+            {/* All Filters button — always present */}
             <button
               onClick={() => { haptic(10); setAllFiltersOpen(true); }}
               className={cn(
@@ -484,13 +484,13 @@ export default function Documents() {
                         <span className="text-muted-foreground text-xs truncate">{detail}</span>
                         {profile && (
                           <>
-                            <span className="text-muted-foreground/40 text-xs">Â·</span>
+                            <span className="text-muted-foreground/40 text-xs">·</span>
                             <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded-full shrink-0", (PROFILE_COLORS[profile.color] || PROFILE_COLORS.slate).tint, (PROFILE_COLORS[profile.color] || PROFILE_COLORS.slate).text)}>
                               {profile.name}
                             </span>
                           </>
                         )}
-                        <span className="text-muted-foreground/40 text-xs">Â·</span>
+                        <span className="text-muted-foreground/40 text-xs">·</span>
                         <span className="text-muted-foreground text-xs whitespace-nowrap">{formatDate(doc.expiry_date)}</span>
                       </div>
                     </div>
@@ -600,7 +600,7 @@ function QuickActionsSheet({ doc, onClose }) {
           renewed_date: new Date().toISOString().split("T")[0],
           previous_expiry: doc.expiry_date, new_expiry: next,
         });
-        console.log("[RenewalHistory] âœ… Created for:", doc.name);
+        console.log("[RenewalHistory] ✅ Created for:", doc.name);
         await Entity.update(doc.id, { expiry_date: next, snoozed_until: null });
         toast({ title: "Renewed successfully", variant: "success" });
       } catch (e) {

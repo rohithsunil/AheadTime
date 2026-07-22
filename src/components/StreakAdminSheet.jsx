@@ -31,7 +31,7 @@ export default function StreakAdminSheet({ onClose }) {
         await db.entities.StreakAdjustment.create({ target_email: email.trim(), streak_count: parseInt(count, 10) });
       }
       queryClient.invalidateQueries({ queryKey: ["streakAdjustments"] });
-      toast({ title: "Streak adjusted", description: `${email} â†’ ${count} days`, variant: "success" });
+      toast({ title: "Streak adjusted", description: `${email} → ${count} days`, variant: "success" });
       setEmail("");
       setCount("");
     } catch {

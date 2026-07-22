@@ -156,7 +156,7 @@ export default function AddDocument() {
       if (result.store) setStore(result.store);
       if (result.value) setVoucherValue(result.value.toString());
     } catch (err) {
-      // OCR failed â€” keep manual entry
+      // OCR failed — keep manual entry
     } finally {
       setScanning(false);
     }
@@ -336,7 +336,7 @@ export default function AddDocument() {
               </div>
               <div className="flex-1">
                 <p className="text-foreground font-semibold text-sm">Scan with OCR</p>
-                <p className="text-muted-foreground text-xs">Upload a photo â€” we'll auto-fill the details</p>
+                <p className="text-muted-foreground text-xs">Upload a photo — we'll auto-fill the details</p>
               </div>
               <label className="shrink-0">
                 <input type="file" accept="image/*" className="hidden" onChange={handleScan} />
@@ -611,7 +611,7 @@ export default function AddDocument() {
                 <div className="glass-frost rounded-2xl px-4 py-3.5 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-foreground">Auto-Pay / Auto-Renewal</p>
-                    <p className="text-xs text-muted-foreground">Mark as automatically charged â€” de-emphasizes alerts</p>
+                    <p className="text-xs text-muted-foreground">Mark as automatically charged — de-emphasizes alerts</p>
                   </div>
                   <button
                     onClick={() => setAutoPay(!autoPay)}

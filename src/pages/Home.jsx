@@ -104,14 +104,14 @@ export default function Home() {
       .slice(0, 5);
   }, [activeItems]);
 
-  // Serenity score: subscriptions only affect score if â‰¤7 days away (not monthly renewal noise)
+  // Serenity score: subscriptions only affect score if ≤7 days away (not monthly renewal noise)
   const urgentCount = useMemo(() => {
     return activeItems.filter((d) => {
       const dl = getDaysLeft(d.expiry_date);
       if (dl === null) return false;
       if (dl < 0) return true; // overdue always counts
-      if (d._type === "subscription") return dl <= 7; // subscriptions: only urgent if â‰¤7 days
-      return dl <= 30; // documents/vouchers: urgent if â‰¤30 days
+      if (d._type === "subscription") return dl <= 7; // subscriptions: only urgent if ≤7 days
+      return dl <= 30; // documents/vouchers: urgent if ≤30 days
     }).length;
   }, [activeItems]);
 
@@ -156,7 +156,7 @@ export default function Home() {
             </div>
             {streak > 0 && (
               <p className="text-muted-foreground text-xs mt-0.5">
-                {streak >= 7 ? "ðŸ”¥ You're on fire!" : "Keep opening daily to build your streak"}
+                {streak >= 7 ? "🔥 You're on fire!" : "Keep opening daily to build your streak"}
               </p>
             )}
           </div>
@@ -165,7 +165,7 @@ export default function Home() {
         <div className="px-5 lg:px-10 max-w-3xl mx-auto w-full space-y-5">
           <NotificationBanner />
 
-          {/* Serenity Score â€” tap to see what affects it */}
+          {/* Serenity Score — tap to see what affects it */}
           <div className="flex flex-col items-center py-4">
             <button onClick={() => setSerenityOpen(true)} className="relative w-44 h-44 flex items-center justify-center active:scale-95 transition-transform">
               <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 176 176">
@@ -193,7 +193,7 @@ export default function Home() {
               className={cn("text-center text-sm mt-3 max-w-[220px]", urgentCount > 0 ? "text-[#FF8C42] dark:text-orange-400 font-medium active:scale-95 transition-transform" : "text-muted-foreground")}
             >
               {urgentCount === 0
-                ? "Everything is on track â€” you're all set."
+                ? "Everything is on track — you're all set."
                 : `${urgentCount} item${urgentCount !== 1 ? "s" : ""} need${urgentCount === 1 ? "s" : ""} attention`}
             </button>
             {/* Inline mini-stats */}
@@ -264,7 +264,7 @@ export default function Home() {
             )}
           </div>
 
-          {/* Streaks â€” prominent section, tap to open full calendar */}
+          {/* Streaks — prominent section, tap to open full calendar */}
           <div onClick={() => streak > 0 && setStreakOpen(true)} className={streak > 0 ? "cursor-pointer" : ""}>
             <StreakSection streak={streak} best={best} canClaim={canClaim} onClaim={claimStreak} />
           </div>

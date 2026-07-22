@@ -113,7 +113,7 @@ export default function FamilyProfiles() {
                       <p className="text-foreground font-semibold text-sm">{p.name}</p>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         <span className="text-xs text-muted-foreground">{p.relationship}</span>
-                        <span className="text-xs text-muted-foreground">â€¢ {stats.total} doc{stats.total !== 1 ? "s" : ""}</span>
+                        <span className="text-xs text-muted-foreground">• {stats.total} doc{stats.total !== 1 ? "s" : ""}</span>
                         {stats.urgent > 0 && (
                           <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-orange-50 dark:bg-orange-950/50 text-orange-600 dark:text-orange-400">
                             {stats.urgent} urgent

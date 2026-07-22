@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShieldCheck, Bell, Lock, ChevronRight, Check, Sun, Moon, Contrast, Monitor, Sparkles } from "lucide-react";
 import { requestNotificationPermission, setNotificationSetting } from "@/lib/reminderChecker";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -13,7 +14,7 @@ const SLIDES = [
   {
     icon: ShieldCheck,
     title: "Track your renewals\nin one place",
-    subtitle: "Documents, subscriptions, bills, warranties â€” all organized and visible at a glance.",
+    subtitle: "Documents, subscriptions, bills, warranties — all organized and visible at a glance.",
     gradient: "linear-gradient(160deg, #FFD4A8 0%, #FFB088 35%, #F0A8C8 100%)",
     darkGradient: "linear-gradient(160deg, #1A1020 0%, #2A1428 40%, #3A1424 100%)",
     statusBarColor: "#FFD4A8",
@@ -61,6 +62,7 @@ export default function Onboarding() {
   const [selectedTheme, setSelectedTheme] = useState(theme || "light");
   const [userName, setUserName] = useState("");
   const [saving, setSaving] = useState(false);
+  const { subscribe: subscribePush, isSubscribed: isPushSubscribed } = usePushNotifications();
 
   const totalSteps = SLIDES.length + 3; // 3 slides + theme + name + finish
   const isDark = theme === "dark" || theme === "amoled" || (theme === "system" && typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -118,9 +120,12 @@ export default function Onboarding() {
       setSaving(true);
       try {
         if (notifEnabled) {
+          // Request local reminder permission
           requestNotificationPermission().then((granted) => {
             if (granted) setNotificationSetting(true);
           });
+          // Subscribe to real Web Push notifications
+          subscribePush().catch(() => {});
         }
         await db.auth.updateMe({
           display_name: userName.trim() || undefined,
@@ -153,7 +158,7 @@ export default function Onboarding() {
               <Sparkles className="w-8 h-8 text-white" strokeWidth={1.5} />
             </div>
             <h1 className="text-foreground text-3xl font-display leading-tight">Choose your vibe</h1>
-            <p className="text-muted-foreground text-sm mt-2 max-w-xs">Pick a theme â€” you can change it later in Settings.</p>
+            <p className="text-muted-foreground text-sm mt-2 max-w-xs">Pick a theme — you can change it later in Settings.</p>
           </div>
           <div className="flex-1 flex flex-col justify-center gap-3">
             {THEME_OPTIONS.map((opt) => {
@@ -201,7 +206,7 @@ export default function Onboarding() {
           </div>
           <div className="flex flex-col items-center text-center mt-6 mb-6">
             <div className="w-16 h-16 rounded-2xl accent-gradient flex items-center justify-center mb-4">
-              <span className="text-2xl">ðŸ‘‹</span>
+              <span className="text-2xl">👋</span>
             </div>
             <h1 className="text-foreground text-3xl font-display leading-tight">What's your name?</h1>
             <p className="text-muted-foreground text-sm mt-2 max-w-xs">We'll greet you personally across the app.</p>
@@ -272,7 +277,7 @@ export default function Onboarding() {
             </div>
           </div>
           <h1 className="text-white text-4xl font-display leading-tight whitespace-pre-line mb-4 drop-shadow-md">
-            {showNotif ? "You're all set!\nReady to track? ðŸŽ‰" : slide.title}
+            {showNotif ? "You're all set!\nReady to track? 🎉" : slide.title}
           </h1>
           <p className="text-white/75 text-sm leading-relaxed max-w-xs drop-shadow-sm">
             {showNotif ? "Enable notifications so you never miss a renewal deadline." : slide.subtitle}

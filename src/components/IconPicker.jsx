@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
 import { toast } from "@/components/ui/use-toast";
 
-// Icon picker â€” lets users choose a custom icon or upload a square image.
+// Icon picker — lets users choose a custom icon or upload a square image.
 // Falls back to category icon when neither is set.
 export default function IconPicker({ customIcon, customImageUrl, onChange }) {
   const [uploading, setUploading] = useState(false);

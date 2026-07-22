@@ -18,12 +18,12 @@ import {
 
 const REFLECTIONS = [
   "A little planning today keeps the rush away tomorrow.",
-  "Calm isn't the absence of tasks â€” it's knowing when they're due.",
+  "Calm isn't the absence of tasks — it's knowing when they're due.",
   "What you track, you master.",
   "Small habits, kept daily, become a life kept well.",
   "The best time to renew was yesterday. The next best is now.",
   "Clarity is kindness to your future self.",
-  "Don't count the days â€” make the days count, then mark them done.",
+  "Don't count the days — make the days count, then mark them done.",
   "Preparation is the quietest form of confidence.",
 ];
 
@@ -84,7 +84,7 @@ export default function Insights() {
 
   const activeItems = useMemo(() => allItems.filter((d) => !d.archived), [allItems]);
 
-  // Vouchers are not expenses â€” exclude from all financial calculations
+  // Vouchers are not expenses — exclude from all financial calculations
   const expenseItems = useMemo(() => activeItems.filter((d) => d._type !== "voucher"), [activeItems]);
 
   const subscriptionMonthly = useMemo(() => {
@@ -247,7 +247,7 @@ export default function Insights() {
             <EmptyState icon={BarChart3} title="No data yet" subtitle="Add items to see insights and analytics." />
           ) : (
             <>
-              {/* Monthly Budget â€” salary vs subscription costs */}
+              {/* Monthly Budget — salary vs subscription costs */}
               <div className="glass-frost rounded-3xl p-5">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-muted-foreground text-[11px] font-medium uppercase tracking-wide">Monthly Budget</h3>
@@ -291,7 +291,7 @@ export default function Insights() {
                         </div>
                         {(subscriptionMonthly / user.monthly_salary) > 0.1 && (
                           <p className="text-amber-600 dark:text-amber-400 text-xs mt-3">
-                            Subscriptions use {Math.round((subscriptionMonthly / user.monthly_salary) * 100)}% of your salary â€” consider reviewing unused ones.
+                            Subscriptions use {Math.round((subscriptionMonthly / user.monthly_salary) * 100)}% of your salary — consider reviewing unused ones.
                           </p>
                         )}
                       </div>
@@ -310,7 +310,7 @@ export default function Insights() {
                     <span className="text-foreground text-sm font-medium">Documents</span>
                   </div>
                   <p className="text-foreground text-2xl font-display">{docStats.total}</p>
-                  <p className="text-muted-foreground text-[11px] mt-0.5">{docStats.overdue} overdue Â· {docStats.upcoming} due soon</p>
+                  <p className="text-muted-foreground text-[11px] mt-0.5">{docStats.overdue} overdue · {docStats.upcoming} due soon</p>
                 </div>
                 <div className="glass-frost rounded-3xl p-4">
                   <div className="flex items-center gap-2 mb-3">
@@ -320,13 +320,13 @@ export default function Insights() {
                     <span className="text-foreground text-sm font-medium">Subscriptions</span>
                   </div>
                   <p className="text-foreground text-2xl font-display">{formatCurrency(subscriptionMonthly)}</p>
-                  <p className="text-muted-foreground text-[11px] mt-0.5">per month Â· {subStats.total} active</p>
+                  <p className="text-muted-foreground text-[11px] mt-0.5">per month · {subStats.total} active</p>
                 </div>
               </div>
 
               {/* Bento grid */}
               <div className="grid grid-cols-6 gap-3">
-                {/* Quote â€” full width */}
+                {/* Quote — full width */}
                 <div className="col-span-6 glass-frost rounded-3xl p-6 flex flex-col justify-between min-h-[120px] relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-br from-orange-50/40 via-transparent to-pink-50/30 dark:from-orange-950/10 dark:to-pink-950/10 pointer-events-none" />
                   <Sparkles className="w-5 h-5 text-[#FF8C42] mb-3 relative" />

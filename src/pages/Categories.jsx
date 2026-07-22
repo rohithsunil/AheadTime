@@ -91,7 +91,7 @@ export default function Categories() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-foreground text-3xl lg:text-4xl font-display">Categories</h1>
-                <p className="text-muted-foreground text-sm mt-1">{totalItems} items â€¢ {categories.length} categories â€¢ {favCount} favourites</p>
+                <p className="text-muted-foreground text-sm mt-1">{totalItems} items • {categories.length} categories • {favCount} favourites</p>
               </div>
               <button
                 onClick={() => { setEditingCat(null); setShowEditor(true); }}
@@ -104,7 +104,7 @@ export default function Categories() {
         </div>
 
         <div className="px-5 lg:px-10 pt-4 max-w-3xl mx-auto w-full">
-          <p className="text-xs text-muted-foreground mb-3 px-1">Drag the handle to reorder â€¢ Tap the star to pin favourites</p>
+          <p className="text-xs text-muted-foreground mb-3 px-1">Drag the handle to reorder • Tap the star to pin favourites</p>
           {catLoading ? (
             <div className="space-y-2.5">
               {[1, 2, 3].map((i) => <div key={i} className="glass-frost rounded-2xl h-16 animate-pulse" />)}

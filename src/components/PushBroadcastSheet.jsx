@@ -1,56 +1,69 @@
 import { db } from '@/api/db';
+import { supabase } from '@/api/supabaseClient';
 
-import React, { useState } from "react";
-import { X, Send, Megaphone, Users } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { X, Send, Megaphone, Bell, CheckCircle2 } from "lucide-react";
 
 import { toast } from "@/components/ui/use-toast";
 
-// Admin-only sheet to compose and send a push broadcast to all registered users.
-// Stores the broadcast in the PushBroadcast entity (so all users see it in-app)
-// and sends an email to every registered user via SendEmail.
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+
+// Admin-only sheet to compose and send a real Web Push broadcast to all subscribed devices.
 export default function PushBroadcastSheet({ onClose }) {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
+  const [subscriberCount, setSubscriberCount] = useState(null);
+
+  // Fetch subscriber count on mount
+  useEffect(() => {
+    supabase
+      .from('push_subscriptions')
+      .select('id', { count: 'exact', head: true })
+      .then(({ count }) => setSubscriberCount(count ?? 0));
+  }, []);
 
   const handleSend = async () => {
     if (!title.trim() || !message.trim()) return;
     setSending(true);
     try {
-      // Fetch all registered users
-      const users = await db.entities.User.list();
-
-      // Store broadcast in DB so all users see it in-app
+      // 1. Store broadcast in DB for in-app display
       await db.entities.PushBroadcast.create({
         title: title.trim(),
-        message: message.trim(),
-        sent_to_count: users.length,
+        body: message.trim(),
+        target_audience: 'all',
       });
 
-      // Send email to each registered user (SendEmail only reaches registered users)
-      let emailCount = 0;
-      for (const u of users) {
-        if (!u.email) continue;
-        try {
-          await db.integrations.Core.SendEmail({
-            to: u.email,
-            subject: `AheadTime: ${title.trim()}`,
+      // 2. Call the Supabase Edge Function for real Web Push delivery
+      const { data: { session } } = await supabase.auth.getSession();
+      const resp = await fetch(
+        `${SUPABASE_URL}/functions/v1/send-push-notification`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({
+            title: title.trim(),
             body: message.trim(),
-          });
-          emailCount++;
-        } catch {
-          // Skip individual send failures â€” broadcast is still stored for in-app
+            url: '/',
+          }),
         }
-      }
+      );
+
+      const result = await resp.json();
+
+      if (!resp.ok) throw new Error(result.error || 'Push delivery failed');
 
       toast({
-        title: "Broadcast sent",
-        description: `${users.length} user${users.length !== 1 ? "s" : ""} notified â€¢ ${emailCount} email${emailCount !== 1 ? "s" : ""} delivered`,
+        title: "Broadcast sent ✅",
+        description: `${result.sent} device${result.sent !== 1 ? 's' : ''} notified${result.failed ? ` • ${result.failed} failed` : ''}`,
         variant: "success",
       });
       onClose();
     } catch (e) {
-      toast({ title: "Failed to send broadcast", variant: "destructive" });
+      toast({ title: "Failed to send broadcast", description: e.message, variant: "destructive" });
     }
     setSending(false);
   };
@@ -66,7 +79,9 @@ export default function PushBroadcastSheet({ onClose }) {
             </div>
             <div>
               <h3 className="text-foreground font-semibold text-base">Send Broadcast</h3>
-              <p className="text-muted-foreground text-xs">Push notification to all registered users</p>
+              <p className="text-muted-foreground text-xs">
+                Real push notification to all subscribed devices
+              </p>
             </div>
           </div>
           {!sending && (
@@ -75,6 +90,17 @@ export default function PushBroadcastSheet({ onClose }) {
             </button>
           )}
         </div>
+
+        {/* Subscriber count badge */}
+        {subscriberCount !== null && (
+          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-foreground/5 mb-4">
+            <Bell className="w-4 h-4 text-[#FF8C42]" />
+            <span className="text-sm font-medium text-foreground">{subscriberCount} device{subscriberCount !== 1 ? 's' : ''} subscribed</span>
+            {subscriberCount === 0 && (
+              <span className="text-xs text-muted-foreground ml-1">— users must enable notifications in the app</span>
+            )}
+          </div>
+        )}
 
         <div className="space-y-3">
           <div>
@@ -99,9 +125,9 @@ export default function PushBroadcastSheet({ onClose }) {
             />
           </div>
 
-          <div className="flex items-center gap-2 px-1 text-muted-foreground text-xs">
-            <Users className="w-3.5 h-3.5" />
-            <span>Delivered as phone notification + in-app alert + email to all registered users</span>
+          <div className="flex items-start gap-2 px-1 text-muted-foreground text-xs">
+            <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 text-green-500 shrink-0" />
+            <span>Delivers as a real phone notification even when the app is closed. Users must have enabled notifications in the app first.</span>
           </div>
 
           <button
@@ -117,7 +143,7 @@ export default function PushBroadcastSheet({ onClose }) {
             ) : (
               <>
                 <Send className="w-4 h-4" />
-                Send to All Users
+                Send to All Devices
               </>
             )}
           </button>
