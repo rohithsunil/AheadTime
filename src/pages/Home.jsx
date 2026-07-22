@@ -366,7 +366,7 @@ function SearchOverlay({ onClose, items }) {
               <FileText className="w-4 h-4 text-muted-foreground" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-foreground truncate">{item.name}</p>
-                <p className="text-xs text-muted-foreground capitalize">{item._type}{item.store ? ` â€¢ ${item.store}` : ""}</p>
+                <p className="text-xs text-muted-foreground capitalize">{item._type}{item.store ? ` • ${item.store}` : ""}</p>
               </div>
             </button>
           ))}
