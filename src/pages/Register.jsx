@@ -74,52 +74,80 @@ export default function Register() {
     return (
       <AuthLayout
         icon={Mail}
-        title="Verify your email"
-        subtitle={`We sent a code to ${email}`}
+        title="Check your email"
+        subtitle={`We sent a verification link to ${email}`}
       >
         {error && (
           <div className="mb-4 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 text-sm">
             {error}
           </div>
         )}
-        <div className="flex justify-center mb-6">
-          <InputOTP
-            maxLength={6}
-            value={otpCode}
-            onChange={setOtpCode}
-            autoFocus
-            autoComplete="one-time-code"
-          >
-            <InputOTPGroup>
-              <InputOTPSlot index={0} />
-              <InputOTPSlot index={1} />
-              <InputOTPSlot index={2} />
-              <InputOTPSlot index={3} />
-              <InputOTPSlot index={4} />
-              <InputOTPSlot index={5} />
-            </InputOTPGroup>
-          </InputOTP>
+
+        <div className="p-4 rounded-2xl glass-frost mb-5 text-center space-y-2">
+          <p className="text-sm font-medium text-foreground">
+            👉 Click the link in your email to verify your account.
+          </p>
+          <p className="text-xs text-muted-foreground">
+            Once clicked, you'll be signed in automatically.
+          </p>
         </div>
-        <button
-          className="w-full h-12 accent-gradient text-white rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50 active:scale-[0.98] transition-transform"
-          onClick={handleVerify}
-          disabled={loading || otpCode.length < 6}
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-1 animate-spin" />
-              Verifying...
-            </>
-          ) : (
-            "Verify"
+
+        <div className="space-y-3">
+          <div className="text-center text-xs text-muted-foreground font-medium uppercase tracking-wider my-2">
+            Or enter 6-digit code if provided
+          </div>
+
+          <div className="flex justify-center mb-4">
+            <InputOTP
+              maxLength={6}
+              value={otpCode}
+              onChange={setOtpCode}
+              autoComplete="one-time-code"
+            >
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+          </div>
+
+          {otpCode.length === 6 && (
+            <button
+              className="w-full h-12 accent-gradient text-white rounded-2xl font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50 active:scale-[0.98] transition-transform"
+              onClick={handleVerify}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-1 animate-spin" />
+                  Verifying code...
+                </>
+              ) : (
+                "Verify Code"
+              )}
+            </button>
           )}
-        </button>
-        <p className="text-center text-sm text-muted-foreground mt-4">
-          Didn't receive the code?{" "}
-          <button onClick={handleResend} className="text-[#FF8C42] dark:text-orange-400 font-medium hover:underline">
-            Resend
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs">
+          <button
+            onClick={() => setShowOtp(false)}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← Back to Sign Up
           </button>
-        </p>
+
+          <button
+            onClick={handleResend}
+            className="text-[#FF8C42] dark:text-orange-400 font-medium hover:underline"
+          >
+            Resend email
+          </button>
+        </div>
       </AuthLayout>
     );
   }
