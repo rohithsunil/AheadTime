@@ -1,0 +1,20 @@
+{
+  "name": "AheadTime — Renewal Tracker",
+  "short_name": "AheadTime",
+  "description": "Never miss a renewal deadline. Track documents, subscriptions, vouchers, and warranties in one place.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FDFDFD",
+  "theme_color": "#FFFFFF",
+  "categories": ["productivity", "lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+name: Supabase Keepalive
+
+on:
+  schedule:
+    # Run daily at 08:00 UTC to prevent free-tier project pausing
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        env:
+          SUPABASE_PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_PROJECT_REF" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "Skipping: set SUPABASE_PROJECT_REF and SUPABASE_ANON_KEY repository secrets"
+            exit 0
+          fi
+
+          echo "Pinging Supabase project $SUPABASE_PROJECT_REF..."
+
+          # Hit REST endpoint
+          curl -sf \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/rest/v1/keepalive?select=last_ping" \
+            || echo "REST ping failed (table may not exist yet)"
+
+          # Call keepalive RPC if migration has been applied
+          curl -sf -X POST \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            "https://${SUPABASE_PROJECT_REF}.supabase.co/rest/v1/rpc/ping_keepalive" \
+            || echo "RPC ping failed (run migration first)"
+
+          echo "Done."

@@ -1,0 +1,468 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 22% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 42%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --font-heading: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-body: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+    --font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 240 10% 8%;
+    --foreground: 220 25% 96%;
+    --card: 230 22% 14%;
+    --card-foreground: 220 25% 96%;
+    --popover: 230 22% 14%;
+    --popover-foreground: 220 25% 96%;
+    --primary: 22 85% 62%;
+    --primary-foreground: 230 22% 10%;
+    --secondary: 230 20% 18%;
+    --secondary-foreground: 220 25% 96%;
+    --muted: 230 20% 16%;
+    --muted-foreground: 220 16% 68%;
+    --accent: 230 20% 20%;
+    --accent-foreground: 220 25% 96%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 220 25% 96%;
+    --border: 230 20% 26%;
+    --input: 230 20% 22%;
+    --ring: 22 85% 62%;
+    --chart-1: 22 85% 62%;
+    --chart-2: 160 55% 50%;
+    --chart-3: 30 80% 58%;
+    --chart-4: 280 65% 65%;
+    --chart-5: 340 75% 60%;
+    --sidebar-background: 230 24% 10%;
+    --sidebar-foreground: 220 25% 96%;
+    --sidebar-primary: 22 85% 62%;
+    --sidebar-primary-foreground: 230 22% 10%;
+    --sidebar-accent: 230 20% 16%;
+    --sidebar-accent-foreground: 220 25% 96%;
+    --sidebar-border: 230 20% 22%;
+    --sidebar-ring: 22 85% 62%;
+  }
+
+  .amoled {
+    --background: 0 0% 0%;
+    --foreground: 220 20% 94%;
+    --card: 0 0% 0%;
+    --card-foreground: 220 20% 94%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 220 20% 94%;
+    --primary: 22 85% 62%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 220 20% 94%;
+    --muted: 0 0% 8%;
+    --muted-foreground: 220 12% 62%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 220 20% 94%;
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 220 20% 94%;
+    --border: 0 0% 18%;
+    --input: 0 0% 16%;
+    --ring: 22 85% 62%;
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 220 20% 94%;
+    --sidebar-primary: 22 85% 62%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 0 0% 12%;
+    --sidebar-accent-foreground: 220 20% 94%;
+    --sidebar-border: 0 0% 18%;
+    --sidebar-ring: 22 85% 62%;
+  }
+}
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  input[type="date"],
+  input[type="datetime-local"],
+  input[type="time"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    font-size: 16px;
+  }
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-clear-button {
+    display: none;
+    -webkit-appearance: none;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.4;
+  }
+
+  /* Prevent iOS auto-zoom on input focus */
+  input, select, textarea {
+    font-size: 16px;
+  }
+  body {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  /* Clean vertical gradient — white at top, soft warm peach/pink at bottom.
+     Matches the old iOS PWA aesthetic: clean, not a heavy orange wash. */
+  html {
+    background: #FDFDFD;
+    overscroll-behavior-y: none;
+    min-height: 100%;
+  }
+
+  /* Fixed background layer — covers full viewport including under the iOS
+     status bar (black-translucent) and during overscroll. This is the standard
+     iOS PWA workaround for background-attachment:fixed not covering the notch area. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(180deg,
+      #FDFDFD 0%,
+      #FDFDFD 18%,
+      #FFF9F4 27%,
+      #FFF2E8 38%,
+      #FFE6D6 52%,
+      #FFD9C8 66%,
+      #FFCCD0 82%,
+      #F8C2CE 100%
+    );
+  }
+
+  html.dark {
+    background: #0C0E1E;
+  }
+  html.dark body::before {
+    background: linear-gradient(180deg,
+      #0C0E1E 0%,
+      #0E1024 20%,
+      #12122C 40%,
+      #181430 58%,
+      #201432 74%,
+      #261430 88%,
+      #201024 100%
+    );
+  }
+
+  html.amoled {
+    background: #000000;
+  }
+  html.amoled body::before {
+    background: #000000;
+  }
+
+  body {
+    @apply text-foreground font-body;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 100vh;
+    overscroll-behavior-y: none;
+    overflow-x: hidden;
+  }
+}
+
+@layer base {
+  /* Hide scrollbar entirely — PWA clean look, scroll still functional */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  *::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .app-gradient {
+    background: linear-gradient(160deg, #FF9D6C 0%, #FFB088 50%, #F0A8C8 100%);
+  }
+  .app-gradient-soft {
+    background: linear-gradient(160deg, #FFB088 0%, #F0A8C8 100%);
+  }
+
+  /* Frosted glass panel — nav bars, menus, floating elements. Opaque + strong blur */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(42px) saturate(1.4);
+    -webkit-backdrop-filter: blur(42px) saturate(1.4);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+  }
+  .dark .glass-panel {
+    background: rgba(28, 28, 40, 0.50);
+    backdrop-filter: blur(42px) saturate(1.3);
+    -webkit-backdrop-filter: blur(42px) saturate(1.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.40);
+  }
+
+  /* Frosted glass card — used on colored/gradient surfaces, semi-opaque + blur */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.40);
+    backdrop-filter: blur(32px) saturate(1.3);
+    -webkit-backdrop-filter: blur(32px) saturate(1.3);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  }
+  .dark .glass-card {
+    background: rgba(40, 40, 56, 0.35);
+    backdrop-filter: blur(32px) saturate(1.2);
+    -webkit-backdrop-filter: blur(32px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.30);
+  }
+
+  /* Frosted glass on light surfaces — most opaque, strong blur, clean matte finish */
+  .glass-frost {
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(42px) saturate(1.4);
+    -webkit-backdrop-filter: blur(42px) saturate(1.4);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+  }
+  .dark .glass-frost {
+    background: rgba(30, 30, 42, 0.40);
+    backdrop-filter: blur(42px) saturate(1.3);
+    -webkit-backdrop-filter: blur(42px) saturate(1.3);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+  }
+
+  .amoled .glass-panel {
+    background: rgba(12, 12, 14, 0.50);
+    backdrop-filter: blur(42px) saturate(1.2);
+    -webkit-backdrop-filter: blur(42px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.60);
+  }
+  .amoled .glass-card {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(42px) saturate(1.2);
+    -webkit-backdrop-filter: blur(42px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.50);
+  }
+  .amoled .glass-frost {
+    background: rgba(16, 16, 20, 0.40);
+    backdrop-filter: blur(42px) saturate(1.2);
+    -webkit-backdrop-filter: blur(42px) saturate(1.2);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+  }
+
+  .accent-gradient {
+    background: linear-gradient(135deg, #FF8C42 0%, #FFB088 100%);
+  }
+  .accent-gradient-text {
+    background: linear-gradient(135deg, #FF8C42 0%, #F0708E 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .glass-card-soft {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Frosted glass backdrop — blurs background content behind all modal/sheet overlays */
+  .fixed.inset-0[class*="bg-black/"] {
+    backdrop-filter: blur(80px) saturate(1.2);
+    -webkit-backdrop-filter: blur(80px) saturate(1.2);
+  }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.animate-slide-up {
+  animation: slide-up 0.45s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in {
+  animation: fade-in 0.35s ease-out;
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(20deg); }
+  40% { transform: rotate(-15deg); }
+  60% { transform: rotate(15deg); }
+  80% { transform: rotate(-10deg); }
+}
+
+@keyframes scale-in {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.animate-scale-in {
+  animation: scale-in 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Breathing pulse — calm, zen-like animation for urgent/overdue status dots */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.65; }
+}
+.animate-breathe {
+  animation: breathe 2.5s ease-in-out infinite;
+}
+
+/* GPU-accelerate glass layers for smooth blur */
+.glass-frost, .glass-panel, .glass-card, .glass-card-soft {
+  transform: translateZ(0);
+}
+.animate-slide-up, .animate-fade-in, .animate-scale-in, .animate-route-in, .animate-toast-in {
+  will-change: opacity;
+  backface-visibility: hidden;
+}
+
+/* iOS: suppress long-press callout / selection highlight on nav controls */
+.select-none {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Bubble toast — matches the app's frosted-glass aesthetic */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(-12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-toast-in {
+  animation: toast-in 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes toast-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-12px) scale(0.96); }
+}
+.animate-toast-out {
+  animation: toast-out 0.25s ease-in forwards;
+}
+
+/* iOS-style page route transition (slide + fade) */
+@keyframes route-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-route-in {
+  animation: route-in 0.4s cubic-bezier(0.32, 0.72, 0, 1) backwards;
+}
+
+/* Streak calendar full-month animation */
+@keyframes pop-in {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.animate-pop-in {
+  animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+/* Celebration burst */
+@keyframes burst {
+  0% { transform: scale(0); opacity: 1; }
+  60% { transform: scale(1.4); opacity: 0.8; }
+  100% { transform: scale(2); opacity: 0; }
+}
+.animate-burst {
+  animation: burst 0.6s ease-out forwards;
+}
+
+/* Subtle spring bounce for interactive elements */
+@keyframes spring-in {
+  0% { transform: scale(0.85) translateY(6px); opacity: 0; }
+  60% { transform: scale(1.03) translateY(-2px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+.animate-spring-in {
+  animation: spring-in 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+/* Streak claim celebration — burst + subtle rotation */
+@keyframes claim-burst {
+  0% { transform: scale(1) rotate(0deg); }
+  30% { transform: scale(1.2) rotate(-3deg); }
+  60% { transform: scale(0.95) rotate(2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.animate-claim-burst {
+  animation: claim-burst 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Gentle pulse for splash screen text — soft breathing opacity + scale */
+@keyframes text-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.03); }
+}
+.animate-text-pulse {
+  animation: text-pulse 2s ease-in-out infinite;
+}
