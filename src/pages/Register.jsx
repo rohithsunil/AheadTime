@@ -138,11 +138,13 @@ export default function Register() {
       }
     >
       <button
-        onClick={handleGoogle}
-        className="w-full h-12 glass-frost rounded-2xl text-sm font-medium flex items-center justify-center gap-2 active:scale-[0.98] transition-transform mb-4"
+        type="button"
+        disabled
+        title="Google registration is currently disabled"
+        className="w-full h-12 glass-frost rounded-2xl text-sm font-medium flex items-center justify-center gap-2 opacity-50 cursor-not-allowed mb-4"
       >
-        <GoogleIcon className="w-5 h-5" />
-        Continue with Google
+        <GoogleIcon className="w-5 h-5 opacity-60" />
+        <span className="text-muted-foreground">Continue with Google (Soon)</span>
       </button>
 
       <div className="relative mb-5">
@@ -150,7 +152,7 @@ export default function Register() {
           <div className="w-full border-t border-border" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-transparent px-3 text-muted-foreground">or</span>
+          <span className="bg-transparent px-3 text-muted-foreground">or email</span>
         </div>
       </div>
 
