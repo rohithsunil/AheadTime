@@ -2,8 +2,7 @@ import { db } from '@/api/db';
 
 import React, { useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Search, ChevronRight, X, RefreshCw, Bell, Archive, Trash2, FileText, CheckSquare, Square, LayoutGrid, Tag, SlidersHorizontal } from "lucide-react";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { Search, ChevronRight, X, RefreshCw, Bell, Archive, Trash2, FileText, CheckSquare, Square, Tag, SlidersHorizontal } from "lucide-react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { usePullToRefresh } from "@/hooks/usePullToRefresh";

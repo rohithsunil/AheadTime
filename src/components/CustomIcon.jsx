@@ -58,7 +58,7 @@ export default function CustomIcon({
           alt=""
           loading="eager"
           decoding="async"
-          fetchpriority="high"
+          fetchPriority="high"
           className="w-full h-full object-cover"
         />
       ) : (

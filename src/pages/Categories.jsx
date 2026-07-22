@@ -2,7 +2,7 @@ import { db } from '@/api/db';
 
 import React, { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Plus, Star, Trash2, X, Check, Edit3, GripVertical } from "lucide-react";
+import { ArrowLeft, Plus, Star, Trash2, X, Edit3, GripVertical } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 import { useQuery } from "@tanstack/react-query";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { SlidersHorizontal, X, Check, Eye, EyeOff } from "lucide-react";
+import { SlidersHorizontal, X, Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
 import { getFilterPrefs, setFilterPrefs } from "@/lib/filterPrefs";

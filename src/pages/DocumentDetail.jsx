@@ -2,7 +2,7 @@ import { db } from '@/api/db';
 
 import React, { useState, useMemo } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Calendar, Paperclip, RefreshCw, Pencil, Bell, Trash2, Clock, ChevronRight, Archive, Tag, FileText, History, BellRing, Users, Ticket, CheckCircle2, ExternalLink, Zap } from "lucide-react";
+import { ArrowLeft, Calendar, Paperclip, RefreshCw, Pencil, Bell, Trash2, Clock, ChevronRight, Archive, Tag, FileText, History, BellRing, Ticket, CheckCircle2, ExternalLink, Zap } from "lucide-react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getDaysLeft, getStatus, STATUS_CONFIG, formatDate, computeNextExpiry } from "@/lib/renewalUtils";

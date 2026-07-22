@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Share, Plus, X } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { haptic } from "@/lib/haptics";
 
 // Detects iOS Safari (not installed as PWA) and shows a custom "Add to Home Screen" banner

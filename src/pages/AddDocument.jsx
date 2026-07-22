@@ -2,12 +2,11 @@ import { db } from '@/api/db';
 
 import React, { useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, ChevronDown, Paperclip, X, Check, Plus, Tag, ScanLine, Sparkles, Bell, Users, FileText, Repeat, Ticket } from "lucide-react";
+import { ArrowLeft, ChevronDown, Paperclip, X, Check, Plus, Tag, ScanLine, Sparkles, Users, FileText, Repeat, Ticket } from "lucide-react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { TEMPLATES, REMINDER_PRESETS, DEFAULT_REMINDER_DAYS, PROFILE_COLORS } from "@/lib/templates";
 import { getCurrency } from "@/lib/currencyUtils";
-import { getIconComponent, getColorClass, ICON_NAMES, COLOR_NAMES, COLOR_MAP } from "@/lib/categoryUtils";
 import { useCategories } from "@/hooks/useCategories";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";

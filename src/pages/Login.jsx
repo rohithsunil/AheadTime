@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { Mail, Lock, Loader2, ArrowRight } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
 import GoogleIcon from "@/components/GoogleIcon";
-import { cn } from "@/lib/utils";
 
 export default function Login() {
   const [email, setEmail] = useState("");

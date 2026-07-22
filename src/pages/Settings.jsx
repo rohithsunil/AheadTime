@@ -2,7 +2,7 @@ import { db } from '@/api/db';
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Moon, Sun, Monitor, Lock, Fingerprint, Download, ChevronRight, Bell, Tag, HelpCircle, LogOut, X, Delete, Users, Trash2, AlertTriangle, Wallet, ChevronDown, Upload, UserCircle, Check, Contrast, Sparkles, RefreshCw, Flame, Megaphone, RotateCcw, Shield } from "lucide-react";
+import { Moon, Sun, Monitor, Lock, Download, ChevronRight, Bell, Tag, HelpCircle, LogOut, X, Delete, Users, Trash2, AlertTriangle, Wallet, ChevronDown, Upload, UserCircle, Check, Contrast, Sparkles, RefreshCw, Flame, Megaphone, RotateCcw, Shield } from "lucide-react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTheme } from "@/hooks/useTheme";

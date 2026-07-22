@@ -103,7 +103,7 @@ export default function NextRenewalHero({ item, categories = [], onClick }) {
             />
           </svg>
           {hasCustomImage ? (
-            <img src={item.custom_image_url} alt="" loading="eager" decoding="async" fetchpriority="high" className="w-10 h-10 rounded-full object-cover relative" />
+            <img src={item.custom_image_url} alt="" loading="eager" decoding="async" fetchPriority="high" className="w-10 h-10 rounded-full object-cover relative" />
           ) : Icon ? (
             <Icon className="w-7 h-7 text-white relative" strokeWidth={1.8} />
           ) : (

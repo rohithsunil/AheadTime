@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Plus, Users, X, Trash2, Pencil, Check } from "lucide-react";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getDaysLeft, getStatus, STATUS_CONFIG } from "@/lib/renewalUtils";
+import { getDaysLeft } from "@/lib/renewalUtils";
 import { PROFILE_COLORS } from "@/lib/templates";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Lock, Delete } from "lucide-react";
 import { cn } from "@/lib/utils";
 

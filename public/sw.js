@@ -30,7 +30,7 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(request.url);
 
   // API requests — always hit network, fall back to cache if offline
-  if (url.pathname.startsWith('/api/')) {
+  if (url.pathname.startsWith('/api/') || url.hostname.endsWith('.supabase.co')) {
     event.respondWith(
       fetch(request).catch(() => caches.match(request))
     );
