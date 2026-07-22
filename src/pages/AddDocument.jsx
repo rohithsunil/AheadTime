@@ -1,4 +1,5 @@
 import { db } from '@/api/db';
+import { scanDocumentWithOCR } from "@/lib/ocrScanner";
 
 import React, { useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -134,29 +135,19 @@ export default function AddDocument() {
       const { file_url } = await db.integrations.Core.UploadFile({ file });
       setAttachmentUrl(file_url);
       setAttachmentName(file.name);
-      const result = await db.integrations.Core.InvokeLLM({
-        prompt: "Extract the document/subscription/bill/voucher name, expiry or renewal date (in YYYY-MM-DD format), category, store/brand (for vouchers), and monetary value (for vouchers) from this image. Valid categories: Govt ID, Subscription, Bill, Loan, Warranty, Insurance, Membership, Education, Health, Other. If a field is not visible, leave it empty.",
-        file_urls: [file_url],
-        response_json_schema: {
-          type: "object",
-          properties: {
-            name: { type: "string" },
-            expiry_date: { type: "string" },
-            category: { type: "string" },
-            renewal_fee: { type: "number" },
-            store: { type: "string" },
-            value: { type: "number" },
-          },
-        },
-      });
+
+      const result = await scanDocumentWithOCR(file);
       if (result.name) setName(result.name);
       if (result.expiry_date) setExpiryDate(result.expiry_date);
-      if (result.category && categories.some((c) => c.name === result.category)) setCategory(result.category);
+      if (result.category) setCategory(result.category);
       if (result.renewal_fee) setRenewalFee(result.renewal_fee.toString());
       if (result.store) setStore(result.store);
       if (result.value) setVoucherValue(result.value.toString());
+
+      toast({ title: "OCR Scan Complete ✨", description: "Auto-filled document details.", variant: "success" });
     } catch (err) {
-      // OCR failed — keep manual entry
+      console.error("OCR Scan Error:", err);
+      toast({ title: "Scan Notice", description: "File uploaded, but could not auto-fill all fields.", variant: "default" });
     } finally {
       setScanning(false);
     }

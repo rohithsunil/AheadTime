@@ -285,7 +285,7 @@ export default function Settings() {
             <Trash2 className="w-4 h-4" /> Delete Account
           </button>
 
-          <p className="text-center text-muted-foreground text-xs">AheadTime v{latestVersion || "3.0"} — made with ❤ï¸ by 8px Studio</p>
+          <p className="text-center text-muted-foreground text-xs">AheadTime v{latestVersion || "3.0"} — made with ❤️ by 8px Studio</p>
         </div>
       </div>
 
@@ -528,61 +528,85 @@ function ImportDialog({ onClose }) {
       const counts = {};
 
       // Import categories — merge by name (skip duplicates to avoid dups)
+      const sanitize = (record) => {
+        if (!record || typeof record !== "object") return null;
+        const { id, created_date, updated_date, created_by_id, is_sample, profile_id, ...clean } = record;
+        const isUuid = typeof profile_id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(profile_id);
+        if (isUuid) clean.profile_id = profile_id;
+        return clean;
+      };
+
       if (Array.isArray(backup.categories) && backup.categories.length > 0) {
         const existingCats = await db.entities.Category.list();
-        const existingNames = new Set(existingCats.map(c => (c.name || "").toLowerCase()));
-        const newCats = backup.categories.filter(c => !existingNames.has((c.name || "").toLowerCase()));
+        const existingNames = new Set(existingCats.map((c) => (c.name || "").toLowerCase()));
+        const newCats = backup.categories.map(sanitize).filter((c) => c && !existingNames.has((c.name || "").toLowerCase()));
         if (newCats.length > 0) {
           await db.entities.Category.bulkCreate(newCats);
+          counts.categories = newCats.length;
+          totalImported += newCats.length;
         }
-        counts.categories = newCats.length;
-        totalImported += newCats.length;
       }
 
       // Import family profiles — merge by name (skip duplicates)
       if (Array.isArray(backup.family_profiles) && backup.family_profiles.length > 0) {
         const existingProfiles = await db.entities.FamilyProfile.list();
-        const existingNames = new Set(existingProfiles.map(p => (p.name || "").toLowerCase()));
-        const newProfiles = backup.family_profiles.filter(p => !existingNames.has((p.name || "").toLowerCase()));
+        const existingNames = new Set(existingProfiles.map((p) => (p.name || "").toLowerCase()));
+        const newProfiles = backup.family_profiles.map(sanitize).filter((p) => p && !existingNames.has((p.name || "").toLowerCase()));
         if (newProfiles.length > 0) {
           await db.entities.FamilyProfile.bulkCreate(newProfiles);
+          counts.profiles = newProfiles.length;
+          totalImported += newProfiles.length;
         }
-        counts.profiles = newProfiles.length;
-        totalImported += newProfiles.length;
       }
 
       // Import documents
       if (Array.isArray(backup.documents) && backup.documents.length > 0) {
-        await db.entities.Document.bulkCreate(backup.documents);
-        counts.documents = backup.documents.length;
-        totalImported += backup.documents.length;
+        const cleanDocs = backup.documents.map(sanitize).filter(Boolean);
+        if (cleanDocs.length > 0) {
+          await db.entities.Document.bulkCreate(cleanDocs);
+          counts.documents = cleanDocs.length;
+          totalImported += cleanDocs.length;
+        }
       }
 
       // Import subscriptions
       if (Array.isArray(backup.subscriptions) && backup.subscriptions.length > 0) {
-        await db.entities.Subscription.bulkCreate(backup.subscriptions);
-        counts.subscriptions = backup.subscriptions.length;
-        totalImported += backup.subscriptions.length;
+        const cleanSubs = backup.subscriptions.map(sanitize).filter(Boolean);
+        if (cleanSubs.length > 0) {
+          await db.entities.Subscription.bulkCreate(cleanSubs);
+          counts.subscriptions = cleanSubs.length;
+          totalImported += cleanSubs.length;
+        }
       }
 
       // Import vouchers
       if (Array.isArray(backup.vouchers) && backup.vouchers.length > 0) {
-        await db.entities.Voucher.bulkCreate(backup.vouchers);
-        counts.vouchers = backup.vouchers.length;
-        totalImported += backup.vouchers.length;
+        const cleanVouchers = backup.vouchers.map(sanitize).filter(Boolean);
+        if (cleanVouchers.length > 0) {
+          await db.entities.Voucher.bulkCreate(cleanVouchers);
+          counts.vouchers = cleanVouchers.length;
+          totalImported += cleanVouchers.length;
+        }
       }
 
       // Import warranties
       if (Array.isArray(backup.warranties) && backup.warranties.length > 0) {
-        await db.entities.Warranty.bulkCreate(backup.warranties);
-        counts.warranties = backup.warranties.length;
-        totalImported += backup.warranties.length;
+        const cleanWarranties = backup.warranties.map(sanitize).filter(Boolean);
+        if (cleanWarranties.length > 0) {
+          await db.entities.Warranty.bulkCreate(cleanWarranties);
+          counts.warranties = cleanWarranties.length;
+          totalImported += cleanWarranties.length;
+        }
       }
 
       // Import renewal history
       if (Array.isArray(backup.renewal_history) && backup.renewal_history.length > 0) {
-        await db.entities.RenewalHistory.bulkCreate(backup.renewal_history);
-        counts.history = backup.renewal_history.length;
+        const cleanHistory = backup.renewal_history.map(sanitize).filter(Boolean);
+        if (cleanHistory.length > 0) {
+          await db.entities.RenewalHistory.bulkCreate(cleanHistory);
+          counts.history = cleanHistory.length;
+          totalImported += cleanHistory.length;
+        }
       }
 
       queryClient.invalidateQueries({ queryKey: ["documents"] });
@@ -601,8 +625,9 @@ function ImportDialog({ onClose }) {
       setStatus("success");
       setMessage(`${totalImported} items imported (${parts}).`);
     } catch (err) {
+      console.error("Backup import error:", err);
       setStatus("error");
-      setMessage("Failed to parse file. Make sure it's a valid AheadTime JSON backup.");
+      setMessage(err?.message || "Failed to parse file. Make sure it's a valid AheadTime JSON backup.");
     }
   };
 

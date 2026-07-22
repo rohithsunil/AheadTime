@@ -1,0 +1,389 @@
+{
+  "app": "AheadTime",
+  "version": "3.0",
+  "exported_at": "2026-07-22T21:20:14.297Z",
+  "documents": [
+    {
+      "custom_icon": null,
+      "notes": null,
+      "renewal_fee": 1200,
+      "expiry_date": "2026-11-10",
+      "attachment_name": "IMG_0798.png",
+      "checklist": null,
+      "snoozed_until": null,
+      "attachment_url": "https://base44.app/api/apps/6a58f117b76fcc8ee9268d87/files/mp/public/6a58f117b76fcc8ee9268d87/43a3594cf_IMG_0798.png",
+      "tags": [
+        "Insurance"
+      ],
+      "profile_name": "Dad",
+      "archived": false,
+      "renewal_url": null,
+      "preparation_date": null,
+      "profile_id": "6a5d02b59d1c5c3051a419b0",
+      "reminder_days": [
+        60,
+        30,
+        14,
+        7,
+        1
+      ],
+      "name": "Takaful Emarat Insurance",
+      "recurrence_type": "Annual",
+      "custom_image_url": null,
+      "category": "Insurance",
+      "is_sample": false
+    },
+    {
+      "custom_icon": null,
+      "notes": null,
+      "renewal_fee": 500,
+      "expiry_date": "2028-11-27",
+      "attachment_name": null,
+      "checklist": null,
+      "snoozed_until": null,
+      "attachment_url": null,
+      "tags": [
+        "UAE"
+      ],
+      "profile_name": null,
+      "archived": false,
+      "renewal_url": null,
+      "preparation_date": null,
+      "profile_id": null,
+      "reminder_days": [
+        30,
+        7,
+        0
+      ],
+      "name": "UAE Driving License",
+      "recurrence_type": "One-time",
+      "custom_image_url": null,
+      "category": "Govt ID",
+      "is_sample": false
+    },
+    {
+      "custom_icon": null,
+      "notes": null,
+      "renewal_fee": 3500,
+      "expiry_date": "2027-11-19",
+      "attachment_name": null,
+      "checklist": null,
+      "snoozed_until": null,
+      "attachment_url": null,
+      "tags": [
+        "UAE"
+      ],
+      "profile_name": null,
+      "archived": false,
+      "renewal_url": null,
+      "preparation_date": null,
+      "profile_id": null,
+      "reminder_days": [
+        30,
+        7,
+        0
+      ],
+      "name": "Emirates ID",
+      "recurrence_type": "One-time",
+      "custom_image_url": null,
+      "category": "Govt ID",
+      "is_sample": false
+    },
+    {
+      "custom_icon": null,
+      "notes": null,
+      "renewal_fee": 802,
+      "expiry_date": "2027-07-09",
+      "attachment_name": null,
+      "checklist": null,
+      "snoozed_until": null,
+      "attachment_url": null,
+      "tags": [
+        "Car"
+      ],
+      "profile_name": "Dad",
+      "archived": false,
+      "renewal_url": null,
+      "preparation_date": null,
+      "profile_id": "6a5f6229a31236a7881b028d",
+      "reminder_days": [
+        30,
+        7,
+        0
+      ],
+      "name": "Vehicle Insurance Renewal",
+      "recurrence_type": "One-time",
+      "custom_image_url": null,
+      "category": "Insurance",
+      "is_sample": false
+    },
+    {
+      "custom_icon": null,
+      "notes": null,
+      "renewal_fee": 580,
+      "expiry_date": "2027-06-09",
+      "attachment_name": null,
+      "checklist": null,
+      "snoozed_until": null,
+      "attachment_url": null,
+      "tags": [
+        "Car"
+      ],
+      "profile_name": "Dad",
+      "archived": false,
+      "renewal_url": null,
+      "preparation_date": null,
+      "profile_id": "6a5f6229a31236a7881b028d",
+      "reminder_days": [
+        30,
+        7,
+        0
+      ],
+      "name": "Vehicle License Renewal",
+      "recurrence_type": "One-time",
+      "custom_image_url": null,
+      "category": "Govt ID",
+      "is_sample": false
+    },
+    {
+      "custom_icon": null,
+      "notes": null,
+      "renewal_fee": 750,
+      "expiry_date": "2026-09-30",
+      "attachment_name": "IMG_0781.png",
+      "checklist": null,
+      "snoozed_until": null,
+      "attachment_url": "https://base44.app/api/apps/6a58f117b76fcc8ee9268d87/files/mp/public/6a58f117b76fcc8ee9268d87/6e1b27667_IMG_0781.png",
+      "tags": [
+        "8px Studio"
+      ],
+      "profile_name": null,
+      "archived": false,
+      "renewal_url": null,
+      "preparation_date": "2026-08-15",
+      "profile_id": null,
+      "reminder_days": [
+        30,
+        7,
+        0
+      ],
+      "name": "Corporate Tax Filing",
+      "recurrence_type": "Annual",
+      "custom_image_url": null,
+      "category": "Business",
+      "is_sample": false
+    },
+    {
+      "custom_icon": null,
+      "notes": null,
+      "renewal_fee": 10500,
+      "expiry_date": "2026-10-30",
+      "attachment_name": "IMG_0780.png",
+      "checklist": null,
+      "snoozed_until": null,
+      "attachment_url": "https://base44.app/api/apps/6a58f117b76fcc8ee9268d87/files/mp/public/6a58f117b76fcc8ee9268d87/456bbb4c3_IMG_0780.png",
+      "tags": [
+        "8px Studio"
+      ],
+      "profile_name": null,
+      "archived": false,
+      "renewal_url": null,
+      "preparation_date": null,
+      "profile_id": null,
+      "reminder_days": [
+        30,
+        7,
+        0
+      ],
+      "name": "Business License Renewal",
+      "recurrence_type": "Annual",
+      "custom_image_url": null,
+      "category": "Business",
+      "is_sample": false
+    }
+  ],
+  "subscriptions": [
+    {
+      "custom_icon": "Sparkles",
+      "notes": null,
+      "renewal_fee": 208,
+      "expiry_date": "2026-08-01",
+      "attachment_name": null,
+      "checklist": null,
+      "snoozed_until": null,
+      "attachment_url": null,
+      "tags": [
+        "Home"
+      ],
+      "profile_name": null,
+      "archived": false,
+      "renewal_url": "https://eanduaeapp.go.link/dashboard?adj_t=1krdx5s2&adj_campaign=webpopupdownloadlink&adj_deep_link_id=363282&adj_deep_link=digitalapp%3A%2F%2Fdashboard",
+      "preparation_date": null,
+      "profile_id": null,
+      "reminder_days": [
+        14,
+        10,
+        7,
+        1
+      ],
+      "name": "e& Home Wifi",
+      "recurrence_type": "Monthly",
+      "custom_image_url": "https://base44.app/api/apps/6a5f4cc5e59611bbd476603c/files/mp/public/6a5f4cc5e59611bbd476603c/e36265647_IMG_0989.jpeg",
+      "category": "Home",
+      "auto_pay": false,
+      "is_sample": false
+    }
+  ],
+  "vouchers": [
+    {
+      "custom_icon": null,
+      "notes": null,
+      "redeemed": false,
+      "expiry_date": "2026-08-09",
+      "attachment_name": "image.jpg",
+      "store": "Lulu",
+      "snoozed_until": null,
+      "attachment_url": "https://base44.app/api/apps/6a58f117b76fcc8ee9268d87/files/mp/public/6a58f117b76fcc8ee9268d87/fb8377c14_image.jpg",
+      "tags": [
+        "Lulu"
+      ],
+      "profile_name": null,
+      "archived": false,
+      "profile_id": null,
+      "reminder_days": [
+        30,
+        7,
+        0
+      ],
+      "name": "DIP Exchange Voucher",
+      "custom_image_url": null,
+      "category": "Gift Voucher",
+      "value": 14.75,
+      "is_sample": false
+    }
+  ],
+  "warranties": [],
+  "categories": [
+    {
+      "name": "Home",
+      "icon": "Home",
+      "color": "cyan",
+      "favourite": true,
+      "sort_order": 0,
+      "is_sample": false
+    },
+    {
+      "name": "Personal",
+      "icon": "BadgeCheck",
+      "color": "rose",
+      "favourite": false,
+      "sort_order": 1,
+      "is_sample": false
+    },
+    {
+      "name": "Govt ID",
+      "icon": "IdCard",
+      "color": "blue",
+      "favourite": true,
+      "sort_order": 0,
+      "is_sample": false
+    },
+    {
+      "name": "Subscription",
+      "icon": "Repeat",
+      "color": "violet",
+      "favourite": false,
+      "sort_order": 1,
+      "is_sample": false
+    },
+    {
+      "name": "Bill",
+      "icon": "Receipt",
+      "color": "amber",
+      "favourite": false,
+      "sort_order": 2,
+      "is_sample": false
+    },
+    {
+      "name": "Loan",
+      "icon": "Landmark",
+      "color": "indigo",
+      "favourite": false,
+      "sort_order": 3,
+      "is_sample": false
+    },
+    {
+      "name": "Warranty",
+      "icon": "ShieldCheck",
+      "color": "teal",
+      "favourite": false,
+      "sort_order": 4,
+      "is_sample": false
+    },
+    {
+      "name": "Insurance",
+      "icon": "Umbrella",
+      "color": "emerald",
+      "favourite": true,
+      "sort_order": 5,
+      "is_sample": false
+    },
+    {
+      "name": "Membership",
+      "icon": "BadgeCheck",
+      "color": "pink",
+      "favourite": false,
+      "sort_order": 6,
+      "is_sample": false
+    },
+    {
+      "name": "Education",
+      "icon": "GraduationCap",
+      "color": "orange",
+      "favourite": false,
+      "sort_order": 7,
+      "is_sample": false
+    },
+    {
+      "name": "Health",
+      "icon": "HeartPulse",
+      "color": "rose",
+      "favourite": false,
+      "sort_order": 8,
+      "is_sample": false
+    },
+    {
+      "name": "Business",
+      "icon": "Briefcase",
+      "color": "cyan",
+      "favourite": true,
+      "sort_order": 9,
+      "is_sample": false
+    },
+    {
+      "name": "Gift Voucher",
+      "icon": "Gift",
+      "color": "purple",
+      "favourite": true,
+      "sort_order": 10,
+      "is_sample": false
+    },
+    {
+      "name": "Other",
+      "icon": "FileText",
+      "color": "slate",
+      "favourite": false,
+      "sort_order": 11,
+      "is_sample": false
+    }
+  ],
+  "family_profiles": [
+    {
+      "name": "Dad",
+      "relationship": "Parent",
+      "color": "rose",
+      "is_sample": false
+    }
+  ],
+  "renewal_history": []
+}

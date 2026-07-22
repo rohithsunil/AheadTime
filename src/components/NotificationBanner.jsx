@@ -11,8 +11,8 @@ export default function NotificationBanner() {
   const permission = typeof Notification !== "undefined" ? Notification.permission : "default";
   const notifSetting = getNotificationSetting();
 
-  // Don't show if already granted and enabled
-  if (permission === "granted" && notifSetting) return null;
+  // Don't show if permission is already granted
+  if (permission === "granted") return null;
 
   const isDenied = permission === "denied";
 
