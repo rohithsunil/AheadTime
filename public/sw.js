@@ -32,7 +32,14 @@ self.addEventListener('fetch', (event) => {
   // API requests — always hit network, fall back to cache if offline
   if (url.pathname.startsWith('/api/') || url.hostname.endsWith('.supabase.co')) {
     event.respondWith(
-      fetch(request).catch(() => caches.match(request))
+      fetch(request).catch(async () => {
+        const cached = await caches.match(request);
+        if (cached) return cached;
+        return new Response(JSON.stringify({ error: 'Network error' }), {
+          status: 503,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      })
     );
     return;
   }
