@@ -465,6 +465,8 @@ export default function Documents() {
             filtered.map((doc) => {
               const isSelected = selected.has(doc.id);
               const profile = profiles.find((p) => p.id === doc.profile_id);
+              const profileName = profile?.name || doc.profile_name;
+              const profileColor = profile?.color || "slate";
               const detail = doc._type === "voucher" && doc.store ? doc.store : doc.category || doc._type;
               return (
                 <div key={doc.id} className={cn("glass-frost rounded-2xl p-3.5 flex items-center gap-3 transition-all active:scale-[0.98]", isSelected && "ring-2 ring-[#FF8C42]")}>
@@ -480,19 +482,28 @@ export default function Documents() {
                     <CustomIcon item={doc} categories={categories} />
                     <div className="flex-1 min-w-0">
                       <p className="text-foreground font-medium text-sm leading-snug line-clamp-2">{doc.name}</p>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span className="text-muted-foreground text-xs truncate">{detail}</span>
-                        {profile && (
+                      <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                        <span className="text-muted-foreground text-xs font-medium shrink-0">{detail}</span>
+                        {profileName && (
                           <>
                             <span className="text-muted-foreground/40 text-xs">·</span>
-                            <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded-full shrink-0", (PROFILE_COLORS[profile.color] || PROFILE_COLORS.slate).tint, (PROFILE_COLORS[profile.color] || PROFILE_COLORS.slate).text)}>
-                              {profile.name}
+                            <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded-full shrink-0", (PROFILE_COLORS[profileColor] || PROFILE_COLORS.slate).tint, (PROFILE_COLORS[profileColor] || PROFILE_COLORS.slate).text)}>
+                              {profileName}
                             </span>
                           </>
                         )}
                         <span className="text-muted-foreground/40 text-xs">·</span>
                         <span className="text-muted-foreground text-xs whitespace-nowrap">{formatDate(doc.expiry_date)}</span>
                       </div>
+                      {doc.tags && doc.tags.length > 0 && (
+                        <div className="flex items-center gap-1 flex-wrap mt-1">
+                          {doc.tags.map((t) => (
+                            <span key={t} className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-foreground/5 border border-foreground/10 text-muted-foreground">
+                              #{t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     <span className={cn("text-xs font-semibold shrink-0 whitespace-nowrap", STATUS_CONFIG[getStatus(doc._daysLeft)].accent)}>{formatCountdown(doc._daysLeft)}</span>
                   </button>

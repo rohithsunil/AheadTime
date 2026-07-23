@@ -13,6 +13,8 @@ export default function ItemRow({ item, categories = [], onClick, showChevron = 
     ? item.store
     : item.category || (item._type === "subscription" ? "Subscription" : item._type === "voucher" ? "Voucher" : "Other");
 
+  const profileName = item.profile_name || item.profile?.name;
+
   return (
     <button
       onClick={onClick}
@@ -24,14 +26,31 @@ export default function ItemRow({ item, categories = [], onClick, showChevron = 
       {/* Zen icon — category-colored rounded square with custom icon/image support */}
       <CustomIcon item={item} categories={categories} />
 
-      {/* Name + meta — full width, no truncation on name */}
+      {/* Name + meta — full width */}
       <div className="flex-1 min-w-0">
         <p className="text-foreground font-medium text-sm leading-snug line-clamp-2">{item.name}</p>
-        <div className="flex items-center gap-1.5 mt-1">
-          <span className="text-muted-foreground text-xs truncate">{detail}</span>
+        <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+          <span className="text-muted-foreground text-xs font-medium shrink-0">{detail}</span>
+          {profileName && (
+            <>
+              <span className="text-muted-foreground/40 text-xs">·</span>
+              <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full shrink-0 bg-rose-500/10 text-rose-500">
+                {profileName}
+              </span>
+            </>
+          )}
           <span className="text-muted-foreground/40 text-xs">·</span>
           <span className="text-muted-foreground text-xs whitespace-nowrap">{formatDate(item.expiry_date)}</span>
         </div>
+        {item.tags && item.tags.length > 0 && (
+          <div className="flex items-center gap-1 flex-wrap mt-1">
+            {item.tags.map((t) => (
+              <span key={t} className="text-[10px] font-medium px-1.5 py-0.5 rounded-md bg-foreground/5 border border-foreground/10 text-muted-foreground">
+                #{t}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Countdown — right aligned, never wraps */}

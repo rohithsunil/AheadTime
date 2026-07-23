@@ -74,7 +74,21 @@ export default function AddDocument() {
     queryKey: ["profiles", "all"],
     queryFn: () => db.entities.FamilyProfile.list(),
   });
-  const { data: categories = [], invalidate: invalidateCategories } = useCategories();
+  const { data: categories = [] } = useCategories();
+
+  const { data: allDocs = [] } = useQuery({ queryKey: ["documents", "all"], queryFn: () => db.entities.Document.list() });
+  const { data: allSubs = [] } = useQuery({ queryKey: ["subscriptions", "all"], queryFn: () => db.entities.Subscription.list() });
+  const { data: allVouch = [] } = useQuery({ queryKey: ["vouchers", "all"], queryFn: () => db.entities.Voucher.list() });
+
+  const existingTags = React.useMemo(() => {
+    const set = new Set();
+    [...allDocs, ...allSubs, ...allVouch].forEach((item) => {
+      if (Array.isArray(item.tags)) {
+        item.tags.forEach((t) => { if (t) set.add(t); });
+      }
+    });
+    return Array.from(set).sort();
+  }, [allDocs, allSubs, allVouch]);
 
   React.useEffect(() => {
     if (isEdit) return;
@@ -468,6 +482,32 @@ export default function AddDocument() {
                 )}
               </div>
             </div>
+            {existingTags.length > 0 && (
+              <div className="flex items-center gap-1.5 flex-wrap mt-2">
+                <span className="text-[11px] text-muted-foreground font-medium mr-1">Suggestions:</span>
+                {existingTags.map((t) => {
+                  const isSelected = tags.includes(t);
+                  return (
+                    <button
+                      key={t}
+                      type="button"
+                      onClick={() => {
+                        if (isSelected) setTags(tags.filter((x) => x !== t));
+                        else setTags([...tags, t]);
+                      }}
+                      className={cn(
+                        "text-xs px-2.5 py-1 rounded-full border transition-all active:scale-95",
+                        isSelected
+                          ? "accent-gradient text-white border-transparent"
+                          : "bg-white/40 dark:bg-white/5 border-white/20 text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {isSelected ? `✓ ${t}` : `+ ${t}`}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </FormField>
 
           {/* Attachment */}
