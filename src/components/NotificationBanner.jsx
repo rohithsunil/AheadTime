@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { Bell, X, Settings as SettingsIcon } from "lucide-react";
-import { requestNotificationPermission, setNotificationSetting, getNotificationSetting, openNotificationSettings } from "@/lib/reminderChecker";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { setNotificationSetting, openNotificationSettings } from "@/lib/reminderChecker";
+import { toast } from "@/components/ui/use-toast";
 
 export default function NotificationBanner() {
   const [dismissed, setDismissed] = useState(() => localStorage.getItem("aheadtime-notif-dismissed") === "true");
+  const { subscribe } = usePushNotifications();
   const [enabling, setEnabling] = useState(false);
 
   if (dismissed) return null;
 
   const permission = typeof Notification !== "undefined" ? Notification.permission : "default";
-  const notifSetting = getNotificationSetting();
 
   // Don't show if permission is already granted
   if (permission === "granted") return null;
@@ -18,16 +20,18 @@ export default function NotificationBanner() {
 
   const handleEnable = async () => {
     if (isDenied) {
-      // Permission was previously denied — can't re-prompt, guide to settings
       openNotificationSettings();
       return;
     }
     setEnabling(true);
-    const granted = await requestNotificationPermission();
-    if (granted) {
+    const res = await subscribe();
+    if (res.success) {
       setNotificationSetting(true);
       localStorage.removeItem("aheadtime-notif-dismissed");
       setDismissed(true);
+      toast({ title: "Notifications enabled 🔔", description: "You are now registered to receive push notifications.", variant: "success" });
+    } else {
+      toast({ title: "Notification alert", description: res.error || "Permission was not granted.", variant: "destructive" });
     }
     setEnabling(false);
   };

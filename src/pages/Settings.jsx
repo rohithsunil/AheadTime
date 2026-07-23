@@ -6,7 +6,8 @@ import { Moon, Sun, Monitor, Lock, Download, ChevronRight, Bell, Tag, HelpCircle
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTheme } from "@/hooks/useTheme";
-import { requestNotificationPermission, getNotificationSetting, setNotificationSetting, getNotificationPermission, openNotificationSettings } from "@/lib/reminderChecker";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { getNotificationSetting, setNotificationSetting, getNotificationPermission, openNotificationSettings } from "@/lib/reminderChecker";
 import { CURRENCIES, getCurrency, setCurrency } from "@/lib/currencyUtils";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";
@@ -36,60 +37,28 @@ export default function Settings() {
   const isAdmin = user?.role === "admin";
   const latestVersion = changelog[0]?.version;
 
+  const { subscribe, unsubscribe } = usePushNotifications();
+
   const toggleNotifications = async (enabled) => {
     if (enabled) {
-      const permission = getNotificationPermission();
-
-      // If the API doesn't exist at all (rare), show unsupported message
-      if (permission === "unsupported") {
-        setNotifications(false);
-        const isAndroid = /Android/.test(navigator.userAgent);
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-        toast({
-          title: "Notifications need setup",
-          description: isAndroid
-            ? "Install AheadTime to your home screen from Chrome ⋮ → Add to Home Screen, then open it from there to enable notifications."
-            : isIOS
-            ? "Add to Home Screen → open from the icon → enable in iOS Settings."
-            : "Use Chrome or install the app to enable notifications.",
-          variant: "default",
-          duration: 8000,
-        });
-        return;
-      }
-
-      if (permission === "denied") {
-        // Can't re-prompt — show step-by-step instructions for the platform
-        setNotifications(false);
-        const instructions = openNotificationSettings();
-        toast({
-          title: "Notifications blocked",
-          description: instructions || "Open settings to allow notifications for this app.",
-          variant: "default",
-          duration: 6000,
-        });
-        return;
-      }
-
-      // Permission is "default" — request it (must be within the click gesture)
-      const granted = await requestNotificationPermission();
-      if (granted) {
+      const res = await subscribe();
+      if (res.success) {
         setNotificationSetting(true);
         setNotifications(true);
-        toast({ title: "Notifications enabled", variant: "success" });
+        toast({ title: "Notifications enabled 🔔", description: "Registered for renewal & broadcast alerts.", variant: "success" });
       } else {
-        // Permission not granted — keep toggle off, guide to settings
         setNotifications(false);
         const currentPerm = getNotificationPermission();
         const instructions = openNotificationSettings();
         toast({
-          title: currentPerm === "denied" ? "Notifications blocked" : "Permission needed",
-          description: instructions || "Allow notifications in your browser or app settings.",
+          title: currentPerm === "denied" ? "Notifications blocked" : "Subscription error",
+          description: res.error || instructions || "Allow notifications in your browser or app settings.",
           variant: "default",
           duration: 6000,
         });
       }
     } else {
+      await unsubscribe();
       setNotificationSetting(false);
       setNotifications(false);
       toast({ title: "Notifications disabled", variant: "default" });
