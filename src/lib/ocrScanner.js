@@ -9,10 +9,12 @@ function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
-      const base64 = reader.result.split(',')[1];
-      resolve(base64);
+      const base64 = reader.result?.split(',')[1];
+      if (base64) resolve(base64);
+      else reject(new Error("Could not read image file data."));
     };
-    reader.onerror = reject;
+    reader.onerror = () => reject(new Error("Failed to read image file."));
+    reader.readAsDataURL(file);
   });
 }
 
@@ -43,41 +45,47 @@ Respond strictly with a JSON object matching this schema:
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [
-            {
-              inlineData: {
-                mimeType,
-                data: base64Data,
-              },
-            },
-            { text: promptText },
-          ],
-        },
-      ],
-      generationConfig: {
-        responseMimeType: 'application/json',
-        temperature: 0.1,
-      },
-    }),
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Gemini OCR failed (${response.status}): ${errorText}`);
-  }
-
-  const data = await response.json();
-  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-  if (!rawText) throw new Error("No text response received from OCR vision engine.");
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
 
   try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                inlineData: {
+                  mimeType,
+                  data: base64Data,
+                },
+              },
+              { text: promptText },
+            ],
+          },
+        ],
+        generationConfig: {
+          responseMimeType: 'application/json',
+          temperature: 0.1,
+        },
+      }),
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Gemini OCR API error (${response.status}): ${errorText}`);
+    }
+
+    const data = await response.json();
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!rawText) throw new Error("No text response received from OCR vision engine.");
+
     const parsed = JSON.parse(rawText);
     return {
       name: parsed.name || undefined,
@@ -87,8 +95,11 @@ Respond strictly with a JSON object matching this schema:
       store: parsed.store || undefined,
       value: parsed.value !== null && parsed.value !== undefined ? Number(parsed.value) : undefined,
     };
-  } catch (parseErr) {
-    console.error("Failed to parse Gemini OCR JSON:", rawText);
-    throw new Error("OCR Vision returned invalid JSON structure.");
+  } catch (err) {
+    clearTimeout(timeoutId);
+    if (err?.name === 'AbortError') {
+      throw new Error("OCR request timed out. Please try uploading a smaller image or enter details manually.");
+    }
+    throw err;
   }
 }

@@ -149,6 +149,7 @@ export default function AddDocument() {
       console.error("OCR Scan Error:", err);
       toast({ title: "Scan Notice", description: "File uploaded, but could not auto-fill all fields.", variant: "default" });
     } finally {
+      e.target.value = "";
       setScanning(false);
     }
   };
