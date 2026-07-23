@@ -36,30 +36,32 @@ export default function PushBroadcastSheet({ onClose }) {
 
       // 2. Call the Supabase Edge Function for real Web Push delivery if deployed
       let pushResultStr = "";
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        const resp = await fetch(
-          `${SUPABASE_URL}/functions/v1/send-push-notification`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${session?.access_token}`,
-            },
-            body: JSON.stringify({
-              title: title.trim(),
-              body: message.trim(),
-              url: '/',
-            }),
-          }
-        );
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token || import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-        if (resp.ok) {
-          const result = await resp.json();
-          pushResultStr = `${result.sent || 0} device(s) notified`;
+      const resp = await fetch(
+        `${SUPABASE_URL}/functions/v1/send-push-notification`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: title.trim(),
+            body: message.trim(),
+            url: '/',
+          }),
         }
-      } catch (err) {
-        console.warn("Edge Function push error:", err);
+      );
+
+      if (resp.ok) {
+        const result = await resp.json();
+        pushResultStr = `${result.sent || 0} device(s) notified`;
+      } else {
+        const errData = await resp.json().catch(() => ({}));
+        console.warn("Edge function broadcast error:", errData);
+        pushResultStr = `Broadcast saved to DB (Push warning: ${errData.error || resp.status})`;
       }
 
       toast({

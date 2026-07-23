@@ -205,19 +205,22 @@ export default function AddDocument() {
     setSaving(true);
     const meta = ENTITY_MAP[type];
     const selectedProfile = profiles.find((p) => p.id === profileId);
+    const nillableStr = (val) => (val && val.trim() ? val.trim() : isEdit ? null : undefined);
+    const nillableNum = (val) => (val !== "" && val !== null && !isNaN(val) ? parseFloat(val) : isEdit ? null : undefined);
+
     const common = {
       name: name.trim(),
       expiry_date: expiryDate,
-      custom_icon: customIcon || undefined,
-      custom_image_url: customImageUrl || undefined,
-      preparation_date: preparationDate || undefined,
-      notes: notes.trim() || undefined,
-      tags: tags.length > 0 ? tags : undefined,
+      custom_icon: nillableStr(customIcon),
+      custom_image_url: nillableStr(customImageUrl),
+      preparation_date: nillableStr(preparationDate),
+      notes: nillableStr(notes),
+      tags: tags.length > 0 ? tags : isEdit ? [] : undefined,
       reminder_days: reminderDays,
-      profile_id: profileId || undefined,
-      profile_name: selectedProfile?.name || undefined,
-      attachment_url: attachmentUrl || undefined,
-      attachment_name: attachmentName || undefined,
+      profile_id: selectedProfile ? selectedProfile.id : isEdit ? null : undefined,
+      profile_name: selectedProfile ? selectedProfile.name : isEdit ? null : undefined,
+      attachment_url: nillableStr(attachmentUrl),
+      attachment_name: nillableStr(attachmentName),
     };
 
     let payload;
@@ -225,18 +228,18 @@ export default function AddDocument() {
       payload = {
         ...common,
         category,
-        store: store.trim() || undefined,
-        value: voucherValue ? parseFloat(voucherValue) : undefined,
-        renewal_url: renewalUrl.trim() || undefined,
+        store: nillableStr(store),
+        value: nillableNum(voucherValue),
+        renewal_url: nillableStr(renewalUrl),
       };
     } else {
       payload = {
         ...common,
         category,
         recurrence_type: recurrence,
-        renewal_fee: renewalFee ? parseFloat(renewalFee) : undefined,
-        checklist: checklist.trim() || undefined,
-        renewal_url: renewalUrl.trim() || undefined,
+        renewal_fee: nillableNum(renewalFee),
+        checklist: nillableStr(checklist),
+        renewal_url: nillableStr(renewalUrl),
         ...(type === "subscription" ? { auto_pay: autoPay } : {}),
       };
     }
@@ -341,8 +344,13 @@ export default function AddDocument() {
                 <ScanLine className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
-                <p className="text-foreground font-semibold text-sm">Scan with OCR</p>
-                <p className="text-muted-foreground text-xs">Upload a photo — we'll auto-fill the details</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-foreground font-semibold text-sm">Scan with OCR</p>
+                  <span className="text-[10px] font-medium text-orange-600 dark:text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-full border border-orange-500/20">
+                    ⚡ Powered by Gemini AI
+                  </span>
+                </div>
+                <p className="text-muted-foreground text-xs mt-0.5">Upload a photo — auto-fills details instantly</p>
               </div>
               <label className="shrink-0">
                 <input type="file" accept="image/*" className="hidden" onChange={handleScan} />
