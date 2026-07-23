@@ -1,11 +1,9 @@
 /**
- * ocrScanner.js — Powered by Google Gemini Vision (gemini-flash-latest)
- * Extracts key fields (Name, Expiry Date, Category, Fee/Value) from document & receipt photos.
+ * ocrScanner.js — Powered by Google Gemini Vision
+ * Extracts key fields from document & receipt photos AND PDFs.
  */
 
-// Fallback base64-encoded key ensures vision OCR works seamlessly on production deployments
-const DEFAULT_KEY_B64 = "QVEuQWI4Uk42TG1ud25qcG1qanNCQjFhYW1KWDNKWmFaa0NMNGtacFU0VWE0cVppbEdrZXc=";
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || atob(DEFAULT_KEY_B64);
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
@@ -13,9 +11,9 @@ function fileToBase64(file) {
     reader.onload = () => {
       const base64 = reader.result?.split(',')[1];
       if (base64) resolve(base64);
-      else reject(new Error("Could not read image file data."));
+      else reject(new Error("Could not read file data."));
     };
-    reader.onerror = () => reject(new Error("Failed to read image file."));
+    reader.onerror = () => reject(new Error("Failed to read file."));
     reader.readAsDataURL(file);
   });
 }
@@ -26,16 +24,45 @@ export async function scanDocumentWithOCR(file) {
   const base64Data = await fileToBase64(file);
   const mimeType = file.type || 'image/jpeg';
 
-  const promptText = `Analyze this image of an ID card, driver license, document, bill, passport, subscription receipt, warranty, or gift voucher.
-Carefully inspect all text printed on the card/document and extract:
-1. "name": The official document or card title (e.g. "NYC Identification Card", "Emirates ID", "Driver License", "Vehicle License", "Takaful Insurance", "Netflix Subscription").
-2. "expiry_date": The expiration date or valid-until date formatted strictly as YYYY-MM-DD. Look for labels like EXPIRATION DATE, EXP DATE, EXP, EXPIRES, VALID UNTIL, DUE DATE. If formatted as MM/DD/YYYY (e.g., 03/11/2030), convert it to 2030-03-11.
-3. "category": Choose the single best category matching this list: ["Govt ID", "Subscription", "Bill", "Loan", "Warranty", "Insurance", "Membership", "Education", "Health", "Gift Voucher", "Other"]. If this is an ID card, license, or passport, choose "Govt ID".
-4. "renewal_fee": Any monetary fee, price, or amount due as a number.
-5. "store": The store or brand name if voucher or warranty.
-6. "value": Face value if gift card.
+  // Gemini Vision supports: image/jpeg, image/png, image/webp, image/heic, image/heif, application/pdf
+  const supportedTypes = [
+    'image/jpeg', 'image/jpg', 'image/png', 'image/webp',
+    'image/heic', 'image/heif', 'application/pdf'
+  ];
 
-Respond ONLY with a JSON object matching this schema:
+  const effectiveMime = supportedTypes.includes(mimeType) ? mimeType : 'image/jpeg';
+
+  const promptText = `You are an expert document parser. Analyze this document image or PDF carefully.
+
+Scan EVERY part of the document — headers, body text, footers, stamps, and fine print.
+
+Extract these fields:
+1. "name": The full official name of this document, card, or service. Examples:
+   - ID card → "Emirates ID", "NYC Identification Card", "Driver's License"
+   - Insurance → "Vehicle Insurance", "Health Insurance Policy"  
+   - Subscription → "Netflix Premium", "Spotify Family", "Adobe Creative Cloud"
+   - Bill → "DEWA Electricity Bill", "Etisalat Invoice"
+   - If uncertain, use the issuing authority + document type (e.g., "Federal Authority - ID Card")
+
+2. "expiry_date": The expiry/expiration/valid-until/due date in YYYY-MM-DD format.
+   - Look for labels: EXPIRY DATE, EXPIRATION DATE, EXP, VALID UNTIL, DUE DATE, VALID THRU, RENEWAL DATE
+   - Convert MM/DD/YYYY → YYYY-MM-DD (e.g., 03/11/2030 → 2030-03-11)
+   - Convert DD/MM/YYYY → YYYY-MM-DD (e.g., 11/03/2030 → 2030-03-11)
+   - If year is 2-digit: 30 → 2030, 28 → 2028
+
+3. "category": Pick the single BEST match from: ["Govt ID", "Subscription", "Bill", "Loan", "Warranty", "Insurance", "Membership", "Education", "Health", "Gift Voucher", "Other"]
+   - ID cards, passports, driver licenses, national IDs → "Govt ID"
+   - Car/health/life/property insurance → "Insurance"
+   - Netflix/Spotify/gym/streaming → "Subscription"
+   - Electricity/water/internet bills → "Bill"
+
+4. "renewal_fee": Any fee, price, or amount due as a plain number (no currency symbols). null if not found.
+
+5. "store": Brand/store name only if this is a voucher or warranty (e.g., "IKEA", "Apple"). null otherwise.
+
+6. "value": Face value only if gift card/voucher. null otherwise.
+
+Respond ONLY with valid JSON. No markdown. No explanation. Just the JSON object:
 {
   "name": string or null,
   "expiry_date": string or null,
@@ -48,7 +75,7 @@ Respond ONLY with a JSON object matching this schema:
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 20000); // 20s timeout
+  const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s for PDFs
 
   try {
     const response = await fetch(url, {
@@ -61,7 +88,7 @@ Respond ONLY with a JSON object matching this schema:
             parts: [
               {
                 inlineData: {
-                  mimeType,
+                  mimeType: effectiveMime,
                   data: base64Data,
                 },
               },
@@ -72,6 +99,7 @@ Respond ONLY with a JSON object matching this schema:
         generationConfig: {
           responseMimeType: 'application/json',
           temperature: 0.1,
+          maxOutputTokens: 512,
         },
       }),
     });
@@ -79,16 +107,20 @@ Respond ONLY with a JSON object matching this schema:
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Gemini OCR API error (${response.status}): ${errorText}`);
+      const errorData = await response.json().catch(() => ({}));
+      const msg = errorData?.error?.message || `HTTP ${response.status}`;
+      throw new Error(`Gemini OCR failed: ${msg}`);
     }
 
     const data = await response.json();
     const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    if (!rawText) throw new Error("No text response received from Gemini vision engine.");
+    if (!rawText) throw new Error("No response from Gemini vision engine.");
 
-    const parsed = JSON.parse(rawText);
+    // Strip any accidental markdown fences
+    const cleaned = rawText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const parsed = JSON.parse(cleaned);
+
     return {
       name: parsed.name || undefined,
       expiry_date: parsed.expiry_date || undefined,
@@ -100,7 +132,7 @@ Respond ONLY with a JSON object matching this schema:
   } catch (err) {
     clearTimeout(timeoutId);
     if (err?.name === 'AbortError') {
-      throw new Error("OCR request timed out. Please try uploading a smaller image or enter details manually.");
+      throw new Error("OCR timed out. Try a smaller/clearer image.");
     }
     throw err;
   }

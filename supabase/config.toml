@@ -24,3 +24,6 @@ additional_redirect_urls = ["http://localhost:5173/reset-password"]
 
 [storage]
 enabled = true
+
+[functions.send-push-notification]
+verify_jwt = false

@@ -28,15 +28,16 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
+    // Always use service role key to bypass RLS for reading subscriptions
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-    const { data: subs, error } = await supabase.from('push_subscriptions').select('*');
-    if (error) throw error;
 
     const bodyData = await req.json().catch(() => ({}));
     const title = bodyData.title || 'AheadTime Alert';
     const body = bodyData.body || 'You have a new notification.';
     const url = bodyData.url || '/';
+
+    const { data: subs, error } = await supabase.from('push_subscriptions').select('*');
+    if (error) throw error;
 
     const payload = JSON.stringify({ title, body, url });
 
@@ -59,7 +60,7 @@ Deno.serve(async (req) => {
           console.error('Failed to send push to endpoint:', sub.endpoint, err?.message || err);
           failed++;
           if (err?.statusCode === 410 || err?.statusCode === 404) {
-            // Subscription expired or unsubscribed — delete stale subscription row
+            // Subscription expired — clean up
             await supabase.from('push_subscriptions').delete().eq('id', sub.id);
           }
         }

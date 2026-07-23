@@ -146,27 +146,38 @@ export default function AddDocument() {
     if (!file) return;
     setScanning(true);
     try {
-      const { file_url } = await db.integrations.Core.UploadFile({ file });
-      setAttachmentUrl(file_url);
-      setAttachmentName(file.name);
-
+      // Run OCR immediately from the local file — no need to upload to storage first
       const result = await scanDocumentWithOCR(file);
-      if (result.name) setName(result.name);
-      if (result.expiry_date) setExpiryDate(result.expiry_date);
-      if (result.category) setCategory(result.category);
-      if (result.renewal_fee) setRenewalFee(result.renewal_fee.toString());
-      if (result.store) setStore(result.store);
-      if (result.value) setVoucherValue(result.value.toString());
 
-      toast({ title: "OCR Scan Complete ✨", description: "Auto-filled document details.", variant: "success" });
+      const anyFilled = result.name || result.expiry_date || result.category;
+      if (!anyFilled) {
+        toast({ title: "Scan Notice", description: "Gemini couldn't extract fields. Try a clearer image or enter manually.", variant: "default" });
+      } else {
+        if (result.name) setName(result.name);
+        if (result.expiry_date) setExpiryDate(result.expiry_date);
+        if (result.category) setCategory(result.category);
+        if (result.renewal_fee) setRenewalFee(result.renewal_fee.toString());
+        if (result.store) setStore(result.store);
+        if (result.value) setVoucherValue(result.value.toString());
+        toast({ title: "OCR Scan Complete ✨", description: "Document details auto-filled by Gemini AI.", variant: "success" });
+      }
+
+      // Upload file to storage in background (non-blocking)
+      if (!attachmentUrl) {
+        db.integrations?.Core?.UploadFile?.({ file }).then(({ file_url }) => {
+          setAttachmentUrl(file_url);
+          setAttachmentName(file.name);
+        }).catch(() => {});
+      }
     } catch (err) {
       console.error("OCR Scan Error:", err);
-      toast({ title: "Scan Notice", description: "File uploaded, but could not auto-fill all fields.", variant: "default" });
+      toast({ title: "OCR Error", description: err?.message || "Scan failed. Try again.", variant: "destructive" });
     } finally {
       e.target.value = "";
       setScanning(false);
     }
   };
+
 
   const applyTemplate = (tpl) => {
     setName(tpl.name);
@@ -343,17 +354,19 @@ export default function AddDocument() {
               <div className="w-10 h-10 rounded-xl accent-gradient flex items-center justify-center shrink-0">
                 <ScanLine className="w-5 h-5 text-white" />
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-1.5">
-                  <p className="text-foreground font-semibold text-sm">Scan with OCR</p>
-                  <span className="text-[10px] font-medium text-orange-600 dark:text-orange-400 bg-orange-500/10 px-2 py-0.5 rounded-full border border-orange-500/20">
-                    ⚡ Powered by Gemini AI
-                  </span>
+              <div className="flex-1 min-w-0">
+                <p className="text-foreground font-semibold text-sm">Scan with OCR</p>
+                <p className="text-muted-foreground text-xs mt-0.5">Upload a photo or PDF — auto-fills details instantly</p>
+                <div className="flex items-center gap-1 mt-1">
+                  <svg viewBox="0 0 24 24" className="w-3 h-3 shrink-0" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L13.8 8.2L20 8.2L15 12L16.8 18.2L12 15L7.2 18.2L9 12L4 8.2L10.2 8.2L12 2Z" fill="url(#gemini-grad)"/>
+                    <defs><linearGradient id="gemini-grad" x1="4" y1="2" x2="20" y2="18" gradientUnits="userSpaceOnUse"><stop stopColor="#4285F4"/><stop offset="0.5" stopColor="#9C40FF"/><stop offset="1" stopColor="#FF6D6D"/></linearGradient></defs>
+                  </svg>
+                  <span className="text-[10px] text-muted-foreground/70 font-medium">Powered by Gemini AI</span>
                 </div>
-                <p className="text-muted-foreground text-xs mt-0.5">Upload a photo — auto-fills details instantly</p>
               </div>
               <label className="shrink-0">
-                <input type="file" accept="image/*" className="hidden" onChange={handleScan} />
+                <input type="file" accept="image/*,application/pdf" className="hidden" onChange={handleScan} />
                 <span className={cn("px-4 py-2 rounded-full text-xs font-semibold text-white flex items-center gap-1.5 cursor-pointer transition-transform active:scale-95", scanning ? "accent-gradient opacity-50" : "accent-gradient")}>
                   {scanning ? (
                     <><div className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Scanning...</>
@@ -364,6 +377,7 @@ export default function AddDocument() {
               </label>
             </div>
           )}
+
 
           {/* Templates */}
           {!isEdit && !isVoucher && (
